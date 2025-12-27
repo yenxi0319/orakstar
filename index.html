@@ -740,83 +740,163 @@
     </div>
   </div>
 
-  <script>
-    // ===== 화면 전환 유틸 =====
-    const screens = {
-      s1: document.getElementById('screen-1'),
-      home: document.getElementById('screen-home'),
-      more: document.getElementById('screen-more'),
-    };
+<script>
+  /* ====== 화면 전환 공통 ====== */
+  const screens = {
+    s1: document.getElementById('screen-1'),
+    home: document.getElementById('screen-home'),
+    more: document.getElementById('screen-more'),
+    ar: document.getElementById('screen-ar'),
+  };
 
-    const navHome = document.getElementById('navHome');
-    const navMore = document.getElementById('navMore');
-    const memberIdEl = document.getElementById('memberId');
+  function showScreen(name){
+    Object.values(screens).forEach(el => el && el.classList.remove('active'));
+    screens[name] && screens[name].classList.add('active');
+  }
 
-    function setActiveNav(which){
-      // nav active 스타일(선택)
-      navHome.classList.remove('active');
-      navMore.classList.remove('active');
-      if(which === 'home') navHome.classList.add('active');
-      if(which === 'more') navMore.classList.add('active');
+  /* ====== 1번 → 2번 (체험 시작) ====== */
+  const goHomeBtn = document.getElementById('goHomeBtn');
+  if (goHomeBtn){
+    goHomeBtn.addEventListener('click', () => showScreen('home'));
+  }
+
+  /* ====== 2번(홈) 안내 버튼 → 4번(AR) ====== */
+  const btnGuide = document.getElementById('btnGuide');
+
+  /* 카메라 요소 */
+  const arVideo = document.getElementById('arVideo');
+  const btnArClose = document.getElementById('btnArClose');
+
+  /* 오버레이 인터랙션 */
+  const fairy = document.getElementById('fairy');
+  const cloud = document.getElementById('cloud');
+
+  /* 팝업 */
+  const popup = document.getElementById('popup');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupBody = document.getElementById('popupBody');
+  const popupClose = document.getElementById('popupClose');
+  const popupNext = document.getElementById('popupNext');
+
+  /* 포인트 */
+  const pointValueEl = document.getElementById('pointValue');
+  let points = 0;
+
+  /* 카메라 스트림 */
+  let mediaStream = null;
+  let cloudTimer = null;
+
+  function openPopup(title, body, showNext=true){
+    popupTitle.textContent = title;
+    popupBody.textContent = body;
+    popupNext.style.display = showNext ? 'inline-flex' : 'none';
+    popup.classList.add('show');
+    popup.setAttribute('aria-hidden','false');
+  }
+  function closePopup(){
+    popup.classList.remove('show');
+    popup.setAttribute('aria-hidden','true');
+  }
+
+  async function startCamera(){
+    try{
+      // iOS/모바일에서 백카메라 우선 (가능하면)
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false
+      });
+      arVideo.srcObject = mediaStream;
+
+      // 3초 후 구름 등장(신화 트리거)
+      cloud.style.display = 'none';
+      if (cloudTimer) clearTimeout(cloudTimer);
+      cloudTimer = setTimeout(() => {
+        cloud.style.display = 'grid';
+      }, 3000);
+
+    }catch(err){
+      openPopup(
+        '카메라 권한이 필요해요',
+        '브라우저에서 카메라 권한을 허용해야 AR 체험 화면이 동작합니다.\n(주소창 왼쪽 자물쇠 아이콘 → 권한에서 카메라 허용)',
+        false
+      );
     }
+  }
 
-    function showScreen(name){
-      Object.values(screens).forEach(el => el.classList.remove('active'));
-      screens[name].classList.add('active');
+  function stopCamera(){
+    if (cloudTimer) clearTimeout(cloudTimer);
+    cloud.style.display = 'none';
 
-      if(name === 'home') setActiveNav('home');
-      if(name === 'more') setActiveNav('more');
+    if (mediaStream){
+      mediaStream.getTracks().forEach(t => t.stop());
+      mediaStream = null;
     }
+    if (arVideo) arVideo.srcObject = null;
+  }
 
-    // ===== 10자리 회원 고유번호 자동 생성 =====
-    function generate10DigitId(){
-      // 1000000000 ~ 9999999999 (10자리 보장)
-      const n = Math.floor(1000000000 + Math.random() * 9000000000);
-      return String(n);
-    }
-
-    function refreshMemberId(){
-      memberIdEl.textContent = generate10DigitId();
-    }
-// ===== 2번 화면: 스와이프 도트(점) 활성화 =====
-const carousel = document.getElementById('stampCarousel');
-const dotsWrap = document.getElementById('stampDots');
-
-if (carousel && dotsWrap) {
-  const cards = Array.from(carousel.querySelectorAll('.stampCard'));
-  const dots = Array.from(dotsWrap.querySelectorAll('.stampDot'));
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const idx = cards.indexOf(e.target);
-      if (idx < 0) return;
-      dots.forEach(d => d.classList.remove('active'));
-      if (dots[idx]) dots[idx].classList.add('active');
+  if (btnGuide){
+    btnGuide.addEventListener('click', async () => {
+      showScreen('ar');
+      await startCamera();
     });
-  }, { root: carousel, threshold: 0.6 });
+  }
 
-  cards.forEach(c => io.observe(c));
-}
-
-    // ===== 이벤트 연결(핵심) =====
-    document.getElementById('goHomeBtn').addEventListener('click', () => {
+  if (btnArClose){
+    btnArClose.addEventListener('click', () => {
+      stopCamera();
       showScreen('home');
     });
+  }
 
-    // ✅ 하단 “점3개+더보기” 클릭 → 3번 화면 + 번호 변경
-    navMore.addEventListener('click', () => {
-      showScreen('more');
-      refreshMemberId();
-    });
+  /* ====== 요정 클릭 → 황소자리 팝업 ====== */
+  let fairyRead = false;
+  fairy?.addEventListener('click', () => {
+    openPopup(
+      '황소자리 · 풍요와 힘의 상징',
+      '“풍요와 힘의 상징, 금빛 오름의 수호 별자리”\n\nCamelliaFairy가 금오름 위 별빛을 모아 길을 안내합니다.'
+    );
+    fairyRead = true;
+  });
 
-    // 홈 탭 클릭
-    navHome.addEventListener('click', () => {
-      showScreen('home');
-    });
+  /* ====== 구름 클릭 → 신화 이야기 팝업 ====== */
+  let storyRead = false;
+  cloud?.addEventListener('click', () => {
+    openPopup(
+      '신화 이야기',
+      '금오름 아래에는 오래전부터 “황금 바위”가 묻혀 있었다고 해요.\n\n사람들의 욕심이 그 바위를 깨우지 않도록, 수호신은 구름의 모습으로 나타나 바위를 지켰고,\n별빛 요정은 길을 잃은 이들을 안전하게 이끕니다.\n\n(끝까지 읽으면 포인트가 적립됩니다)'
+    );
+    storyRead = true;
+  });
 
-    // 화면3 처음 들어갈 때도 1회 생성
-    refreshMemberId();
-  </script>
+  /* ====== 팝업 닫기/다 읽었어요 ====== */
+  popupClose?.addEventListener('click', closePopup);
+
+  popupNext?.addEventListener('click', () => {
+    closePopup();
+
+    // “별자리(요정) + 신화(구름)” 둘 다 읽은 뒤 포인트 적립
+    if (fairyRead && storyRead){
+      points += 100;
+      if (pointValueEl) pointValueEl.textContent = String(points);
+
+      // 한 번 적립되면 반복 적립 방지(원하면 제거 가능)
+      fairyRead = false;
+      storyRead = false;
+
+      openPopup(
+        '포인트 적립 완료!',
+        '신화 이야기를 모두 확인하여 100P가 적립되었습니다.',
+        false
+      );
+    }
+  });
+
+  /* ====== 손모양 커서: JS가 아니라 CSS에서 처리(이미 추가함) ====== */
+</script>
+
+
+
+
+  
 </body>
 </html>
