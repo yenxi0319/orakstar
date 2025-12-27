@@ -430,7 +430,212 @@
       font-weight: 900;
       letter-spacing:-0.2px;
     }
+
+/* ===== (추가) 공통 버튼/커서 개선 ===== */
+.tappable { cursor: pointer; }
+
+/* ===== (추가) 모달(스탬프 코인 쌓기) ===== */
+.modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.modal.show{ display:flex; }
+.modalDim{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.35);
+}
+.modalCard{
+  position: relative;
+  width: min(360px, calc(100% - 40px));
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.modalTitle{ font-weight: 900; font-size: 16px; letter-spacing:-.2px; }
+.modalSub{ margin-top:6px; color:var(--muted); font-size: 12.5px; }
+.modalActions{
+  margin-top: 14px;
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+}
+.ghostBtn, .primaryMini{
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 900;
+  border:1px solid var(--line);
+  background:#fff;
+}
+.primaryMini{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+.coinStack{
+  margin-top: 14px;
+  height: 110px;
+  position: relative;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.coinStack img{
+  width: 56px;
+  height: 56px;
+  position: absolute;
+  bottom: 0;
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,.12));
+  transform: translateY(30px) scale(.9);
+  opacity: 0;
+  animation: coinDrop .45s ease forwards;
+}
+@keyframes coinDrop{
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ===== (추가) AR 화면 ===== */
+.arStage{
+  position: relative;
+  height: 700px;
+  margin: 0 16px 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  background:#000;
+  border:1px solid var(--line);
+}
+#arVideo{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+.arHud{
+  position:absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  display:flex;
+  justify-content:space-between;
+  gap: 10px;
+  z-index: 5;
+}
+.arChip{
+  flex: 1;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(229,231,235,.9);
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-weight: 800;
+  font-size: 12.5px;
+}
+.arChip .dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+.pointChip{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(229,231,235,.9);
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-weight: 900;
+  font-size: 12.5px;
+}
+.pointChip img{ width:16px; height:16px; object-fit:contain; }
+
+/* 요정/구름 버튼 (AR 오브젝트) */
+.fairy, .cloud{
+  position:absolute;
+  z-index: 6;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+.fairy{
+  width: 86px;
+  height: 86px;
+}
+.fairy img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display:block;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.35));
+}
+.cloud{
+  width: 64px;
+  height: 64px;
+  display: none;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  border:1px solid rgba(229,231,235,.9);
+  box-shadow: 0 10px 20px rgba(0,0,0,.15);
+  font-size: 26px;
+}
+
+/* 팝업(별자리/신화/포인트) 카드 UI */
+.popup{
+  position:absolute;
+  inset: 0;
+  display:none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  background: rgba(0,0,0,.35);
+}
+.popup.show{ display:flex; }
+.popupCard{
+  width: min(360px, calc(100% - 40px));
+  background: rgba(255,255,255,.98);
+  border: 1px solid rgba(229,231,235,.95);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.popupTitle{
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing:-.2px;
+}
+.popupBody{
+  margin-top: 10px;
+  color:#111827;
+  font-size: 13.5px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+.popupActions{
+  margin-top: 14px;
+  display:flex;
+  gap: 10px;
+  justify-content:flex-end;
+}
+
+/* 3번 화면 topbar 글씨/아이콘 잘림 보정 */
+#screen-more .title{ font-size: 16px; font-weight: 900; }
+#screen-more .iconbtn svg{ width:20px; height:20px; }
+
+
+
+
+    
   </style>
+
+  
 </head>
 
 <body>
@@ -660,16 +865,22 @@
         카메라 ON · CamelliaFairy를 눌러보세요
       </div>
 
-      <div class="pointChip">
-        포인트 <b id="pointValue">0</b>P
-      </div>
+     <div class="pointChip">
+  <img src="coin2.png" alt="coin">
+  포인트 <b id="pointValue">0</b>P
+</div>
+
     </div>
 
     <!-- 요정(클릭 대상) -->
-    <button id="fairy" class="fairy tappable" type="button" aria-label="CamelliaFairy">
-      ✨🧚
-      <span class="fairyName">CamelliaFairy</span>
-    </button>
+<button id="fairy" class="fairy tappable" type="button" aria-label="CamelliaFairy">
+  <img src="CamelliaFairy.png" alt="CamelliaFairy">
+</button>
+
+
+
+
+    
 
     <!-- 구름(시간 지연 후 등장) -->
     <button id="cloud" class="cloud tappable" type="button" aria-label="구름 아이콘">
@@ -876,8 +1087,8 @@
 
     // “별자리(요정) + 신화(구름)” 둘 다 읽은 뒤 포인트 적립
     if (fairyRead && storyRead){
-      points += 100;
-      if (pointValueEl) pointValueEl.textContent = String(points);
+     addPoints(100);
+
 
       // 한 번 적립되면 반복 적립 방지(원하면 제거 가능)
       fairyRead = false;
@@ -892,6 +1103,123 @@
   });
 
   /* ====== 손모양 커서: JS가 아니라 CSS에서 처리(이미 추가함) ====== */
+
+/* ===== (추가) 홈 상단 포인트/스탬프 동기화 ===== */
+const homePointEl = document.getElementById('homePoint');
+const stampCountEl = document.getElementById('stampCount');
+let stampCount = 0;
+
+function syncHome(){
+  if (homePointEl) homePointEl.textContent = String(points);
+  if (stampCountEl) stampCountEl.textContent = String(stampCount);
+}
+
+/* 최초 1회 */
+syncHome();
+
+/* ===== (추가) 스탬프(+) 버튼 → coin1 5개 쌓기 모달 ===== */
+const btnStamp = document.getElementById('btnStamp');
+const coinModal = document.getElementById('coinModal');
+const coinStack = document.getElementById('coinStack');
+const closeCoinModal = document.getElementById('closeCoinModal');
+const confirmCoin = document.getElementById('confirmCoin');
+
+function openCoinModal(){
+  if (!coinModal || !coinStack) return;
+  coinStack.innerHTML = '';
+  coinModal.classList.add('show');
+  coinModal.setAttribute('aria-hidden','false');
+
+  // coin1.png 5개가 순서대로 쌓이게
+  for(let i=0;i<5;i++){
+    const img = document.createElement('img');
+    img.src = 'coin1.png';
+    img.alt = 'coin1';
+    img.style.left = (50 + (Math.random()*10-5)) + '%';
+    img.style.transform = `translateX(-50%) translateY(${30 + i*3}px) scale(${0.95 + i*0.02})`;
+    img.style.animationDelay = `${i*0.12}s`;
+    img.style.zIndex = String(10+i);
+    coinStack.appendChild(img);
+  }
+}
+
+function closeCoin(){
+  if (!coinModal) return;
+  coinModal.classList.remove('show');
+  coinModal.setAttribute('aria-hidden','true');
+}
+
+btnStamp?.addEventListener('click', openCoinModal);
+closeCoinModal?.addEventListener('click', closeCoin);
+coinModal?.querySelector('.modalDim')?.addEventListener('click', closeCoin);
+
+confirmCoin?.addEventListener('click', () => {
+  // 전시용: 확인 누르면 스탬프 1 증가(최대 5)
+  stampCount = Math.min(5, stampCount + 1);
+  syncHome();
+  closeCoin();
+});
+
+/* ===== (추가) AR 오브젝트(요정/구름) 위치 랜덤 살짝 이동 ===== */
+function clamp(v,min,max){ return Math.max(min, Math.min(max,v)); }
+
+// 기본 위치(퍼센트)
+let fairyPos = { x: 68, y: 62 };  // 우하단 근처
+let cloudPos = { x: 26, y: 40 };  // 좌중단 근처
+
+function applyPos(){
+  if (fairy){
+    fairy.style.left = fairyPos.x + '%';
+    fairy.style.top  = fairyPos.y + '%';
+  }
+  if (cloud){
+    cloud.style.left = cloudPos.x + '%';
+    cloud.style.top  = cloudPos.y + '%';
+  }
+}
+applyPos();
+
+// 700ms마다 아주 살짝 흔들리듯 이동
+setInterval(() => {
+  fairyPos.x = clamp(fairyPos.x + (Math.random()*2-1)*1.2, 8, 88);
+  fairyPos.y = clamp(fairyPos.y + (Math.random()*2-1)*1.2, 16, 82);
+
+  cloudPos.x = clamp(cloudPos.x + (Math.random()*2-1)*1.0, 8, 88);
+  cloudPos.y = clamp(cloudPos.y + (Math.random()*2-1)*1.0, 16, 82);
+
+  applyPos();
+}, 700);
+
+/* ===== (수정) 포인트 적립이 홈에도 반영되도록 syncHome 호출 ===== */
+const _oldPopupNext = popupNext?.onclick; // 혹시 기존 onclick을 쓰는 경우 대비
+
+popupNext?.addEventListener('click', () => {
+  // 기존 로직이 이미 addEventListener로 붙어 있으니,
+  // 여기서는 “포인트가 바뀐 후 홈도 반영”만 추가로 보장합니다.
+  syncHome();
+});
+
+/* ===== (추가) 포인트 적립될 때 홈에도 즉시 반영되도록: 기존 points 증가 직후에도 호출 ===== */
+/* 아래는 안전장치: points 값이 바뀔 때마다 syncHome를 호출할 수 있게 setPoint 헬퍼 */
+function addPoints(p){
+  points += p;
+  if (pointValueEl) pointValueEl.textContent = String(points);
+  syncHome();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 
