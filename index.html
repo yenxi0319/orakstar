@@ -3,430 +3,477 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>오르樂별 : 탐라 스타로드</title>
+  <title>오르락별 : 탐라 스타로드</title>
 
-  <!-- 앱처럼 보이게 -->
+  <!-- PWA 기본 -->
   <meta name="theme-color" content="#6E6BEA" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
 
   <style>
     :root{
-      --bg1:#6E6BEA;
-      --bg2:#7A5EE6;
-      --card:#ffffff;
-      --text:#111;
+      --bg:#ffffff;
+      --ink:#111827;
       --muted:#6b7280;
       --line:#e5e7eb;
-      --soft:#f4f5f7;
+      --card:#ffffff;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+      --radius:18px;
+
+      --grad1:#6E6BEA;
+      --grad2:#7A5EE6;
+      --btn:#ffffff;
+      --btnInk:#4f46e5;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
-      color:var(--text);
-      background:#fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+      color:var(--ink);
+      background: var(--bg);
     }
-    .screen{min-height:100vh; display:none;}
+
+    /* 공통: 휴대폰 화면 느낌(데모용) */
+    .app{
+      max-width: 420px;
+      margin: 0 auto;
+      min-height: 100svh;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ===== 화면 1: 스플래시 ===== */
+    .screen{
+      display:none;
+      min-height: 100svh;
+    }
     .screen.active{display:block;}
 
-    /* ========== SCREEN 1 (NFC 스플래시) ========== */
     .splash{
-      min-height:100vh;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      background: linear-gradient(180deg, var(--grad1), var(--grad2));
       color:#fff;
-      padding: 56px 20px 28px;
       display:flex;
-      flex-direction:column;
       align-items:center;
       justify-content:center;
+      padding: 24px 18px;
+    }
+    .splash-inner{
+      width:100%;
       text-align:center;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
     }
-    .pulseWrap{
-      width:96px; height:96px; border-radius:999px;
-      display:grid; place-items:center;
-      margin-bottom:18px;
-      position:relative;
+    .target{
+      width: 92px; height: 92px;
+      margin: 34px auto 18px;
+      position: relative;
+      border-radius: 50%;
     }
-    .pulseRing{
+    .ring, .ring2, .dot{
       position:absolute; inset:0;
+      margin:auto;
       border-radius:999px;
-      border:6px solid rgba(255,255,255,.9);
-      opacity:.9;
-      transform: scale(1);
-      animation: pulse 1.4s ease-in-out infinite;
+      border: 8px solid rgba(255,255,255,.95);
     }
-    .pulseRing:nth-child(2){
-      inset:12px;
-      border-width:6px;
-      opacity:.9;
-      animation-delay:.12s;
+    .ring2{
+      width: 58px; height: 58px;
+      border-width: 7px;
+      animation: pulse 1.6s ease-in-out infinite;
     }
-    .pulseDot{
-      width:18px; height:18px; border-radius:999px;
-      background:#fff;
+    .dot{
+      width: 18px; height: 18px;
+      border-width: 6px;
+      background: rgba(255,255,255,.95);
     }
     @keyframes pulse{
-      0%{transform:scale(0.96); opacity:.85}
-      50%{transform:scale(1.05); opacity:1}
-      100%{transform:scale(0.96); opacity:.85}
+      0%{ transform: scale(0.92); opacity: .85; }
+      50%{ transform: scale(1.06); opacity: 1; }
+      100%{ transform: scale(0.92); opacity: .85; }
     }
     .splash h1{
-      margin: 8px 0 8px;
-      font-size: 28px;
-      letter-spacing:-.5px;
+      font-size: 22px;
+      margin: 10px 0 10px;
+      letter-spacing: -0.4px;
     }
     .splash p{
-      margin:0 0 22px;
-      font-size: 15px;
-      line-height:1.6;
-      opacity:.9;
+      margin: 0 0 22px;
+      opacity: .92;
+      line-height: 1.5;
+      font-size: 14px;
     }
     .btn{
-      border:none;
-      background:#fff;
-      color:#4f46e5;
-      font-weight:700;
+      border:0;
+      background: var(--btn);
+      color: var(--btnInk);
+      font-weight: 700;
+      font-size: 16px;
       padding: 14px 22px;
-      border-radius:999px;
-      font-size:16px;
-      min-width: 210px;
-      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+      border-radius: 999px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.18);
       cursor:pointer;
     }
     .hint{
-      margin-top:18px;
-      font-size:12px;
-      opacity:.85;
+      margin-top: 12px;
+      font-size: 12px;
+      opacity: .85;
     }
 
-    /* ========== SCREEN 2 (홈 UI) ========== */
-    .app{
-      background:#fff;
-      min-height:100vh;
-      padding-bottom:78px; /* bottom nav space */
+    /* ===== 화면 2: 홈(예시) ===== */
+    .home{
+      padding: 18px 18px 92px;
+      padding-top: calc(18px + env(safe-area-inset-top));
+      background: #fff;
     }
+
     .topbar{
-      height: 56px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .title{
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-top: 2px;
+    }
+    .top-icons{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .iconbtn{
+      width: 28px; height: 28px;
+      display:grid; place-items:center;
+    }
+    .iconbtn svg{width:22px;height:22px; opacity:.65}
+
+    .actionRow{
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 10px;
+      display:flex;
+      justify-content:space-between;
+      margin: 8px 0 18px;
+    }
+    .action{
+      width: 25%;
+      text-align:center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.1;
+    }
+    .action svg{
+      width: 22px; height: 22px;
+      display:block; margin: 0 auto 6px;
+      opacity: .55;
+    }
+
+    .sectionTitleRow{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding: 0 16px;
-      border-bottom:1px solid var(--line);
-      background:#fff;
-      position:sticky;
-      top:0;
-      z-index:5;
-    }
-    .topbar .title{
-      font-size:18px;
-      font-weight:800;
-      letter-spacing:-.2px;
-    }
-    .topbar .icons{
-      display:flex; gap:10px; align-items:center; color:var(--muted);
-      font-size:12px;
-    }
-    .iconBtn{
-      width:34px; height:34px;
-      border:1px solid var(--line);
-      border-radius:10px;
-      display:grid; place-items:center;
-      background:#fff;
-    }
-
-    .content{padding:16px;}
-    .row{
-      display:flex; align-items:center; justify-content:space-between;
-      margin: 8px 0 12px;
+      margin: 2px 0 10px;
     }
     .sectionTitle{
-      font-size:18px; font-weight:900; letter-spacing:-.2px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
     }
-    .chev{
-      width:34px;height:34px;border-radius:999px;
-      border:1px solid var(--line);
-      display:grid; place-items:center;
-      color:var(--muted);
-      background:#fff;
-      font-weight:900;
-    }
+    .chev svg{width:20px;height:20px; opacity:.5}
 
     .card{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:18px;
-      padding:14px;
-      box-shadow: 0 10px 20px rgba(17,24,39,.06);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.04);
+      background: var(--card);
     }
-    .quickActions{
+
+    .stampImgWrap{
       display:flex;
-      gap:10px;
-      justify-content:space-between;
-      margin-bottom:14px;
-    }
-    .qa{
-      flex:1;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:10px 8px;
-      text-align:center;
-      color:var(--muted);
-      font-size:12px;
-      background:var(--soft);
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      align-items:center;
       justify-content:center;
-      min-height:64px;
+      margin-top: 6px;
+      margin-bottom: 10px;
     }
-    .qa svg{opacity:.75}
-    .shop{
-      margin-top:8px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .shopLabel{
-      font-size:16px;
-      font-weight:900;
-    }
-    .stampPill{
-      display:inline-block;
-      font-weight:900;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding: 6px 10px;
-      width: fit-content;
-      background:#fff;
-    }
-    .oreumImgWrap{
-      margin: 6px auto 4px;
-      width: 170px;
-      height: 170px;
+    .stampImg{
+      width: 122px;
+      height: 122px;
+      object-fit: contain;
       border-radius: 22px;
-      overflow:hidden;
-      border:1px solid var(--line);
-      background:#fff;
-      display:grid;
-      place-items:center;
+      background: #fff;
     }
-    .oreumImgWrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .sub{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.5;
+    .bigName{
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+      margin: 4px 0 8px;
+      text-align:left;
     }
 
-    /* bottom nav */
-    .bottomNav{
-      position:fixed;
-      left:0; right:0; bottom:0;
-      height:68px;
-      border-top:1px solid var(--line);
-      background:#fff;
-      display:flex;
-      justify-content:space-around;
-      align-items:center;
-      padding-bottom: env(safe-area-inset-bottom);
-      z-index:10;
+    .pill{
+      display:inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background:#f3f4f6;
+      font-weight: 800;
+      font-size: 13px;
+      color:#111827;
+      margin-right: 10px;
     }
-    .navItem{
-      width:20%;
+    .meta{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin-top: 6px;
+    }
+
+    .divider{
+      height: 14px;
+    }
+
+    /* 하단 탭바 */
+    .tabbar{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: min(420px, 100%);
+      background:#fff;
+      border-top: 1px solid var(--line);
+      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
       display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
-      font-size:11px;
-      color:#9ca3af;
+      justify-content:space-between;
+      gap: 6px;
+      z-index: 10;
+    }
+    .tab{
+      width: 20%;
       text-align:center;
+      color: #9ca3af;
+      font-size: 11px;
     }
-    .navItem.active{color:#111}
-    .navIcon{
-      width:26px; height:26px;
-      display:grid; place-items:center;
+    .tab svg{
+      width: 22px; height: 22px;
+      display:block; margin: 0 auto 6px;
+      opacity: .75;
     }
-    .badgeDot{
-      width:10px;height:10px;border-radius:999px;background:#f59e0b;
-      margin-top:2px;
-    }
+    .tab.active{ color:#111827; }
+    .tab.active svg{ opacity: 1; }
 
-    /* 작은 화면 최적화 */
-    @media (max-width:360px){
-      .splash h1{font-size:24px}
-      .btn{min-width:190px}
-      .oreumImgWrap{width:150px;height:150px}
+    /* 작은 도움말 */
+    .tinyNote{
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .tinyNote code{
+      background:#f3f4f6;
+      padding:2px 6px;
+      border-radius: 8px;
     }
   </style>
 </head>
 
 <body>
-  <!-- SCREEN 1 -->
-  <section id="screen1" class="screen splash active">
-    <div class="pulseWrap" aria-hidden="true">
-      <div class="pulseRing"></div>
-      <div class="pulseRing"></div>
-      <div class="pulseDot"></div>
-    </div>
-
-    <h1>NFC 도장을 가져다 대세요</h1>
-    <p>휴대폰을 NFC 태그에 가까이 대면<br/>자동으로 인식됩니다</p>
-
-    <button class="btn" id="btnStart">NFC 읽기 시작</button>
-    <div class="hint">전시 데모용 화면 (버튼은 ‘NFC 터치’ 시뮬레이션)</div>
-  </section>
-
-  <!-- SCREEN 2 -->
-  <section id="screen2" class="screen app">
-    <header class="topbar">
-      <div class="title">오르樂별 : 탐라 스타로드</div>
-      <div class="icons">
-        <div class="iconBtn" title="쿠폰">
-          <!-- 쿠폰 느낌 아이콘 -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M5 7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4V7z" stroke="#9CA3AF" stroke-width="2"/>
-            <path d="M12 8v8" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="2 2"/>
-          </svg>
+  <div class="app">
+    <!-- 화면 1: 스플래시 (요청 1번 화면 느낌) -->
+    <section id="screen-splash" class="screen splash active">
+      <div class="splash-inner">
+        <div class="target" aria-hidden="true">
+          <div class="ring"></div>
+          <div class="ring2"></div>
+          <div class="dot"></div>
         </div>
-        <div class="iconBtn" title="알림">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M15 17H9" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-            <path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" stroke="#9CA3AF" stroke-width="2" stroke-linejoin="round"/>
+        <h1>NFC 도장을 가져다 대세요</h1>
+        <p>휴대폰을 NFC 태그에 가까이 대면 자동으로 인식됩니다</p>
+        <button class="btn" id="btnStart">NFC 읽기 시작</button>
+        <div class="hint">데모용: 버튼을 누르면 ‘홈’ 화면으로 전환됩니다</div>
+      </div>
+    </section>
+
+    <!-- 화면 2: 홈 (요청 2번 화면 커스텀) -->
+    <section id="screen-home" class="screen home">
+      <div class="topbar">
+        <div class="title">오르樂별 : 탐라 스타로드</div>
+        <div class="top-icons">
+          <div class="iconbtn" title="내쿠폰함(예시)">
+            <!-- 쿠폰 아이콘 -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/>
+              <path d="M9 9h.01M15 15h.01"/>
+            </svg>
+          </div>
+          <div class="iconbtn" title="알림(예시)">
+            <!-- 벨 아이콘 -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="actionRow">
+        <div class="action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          스탬프
+        </div>
+        <div class="action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M7 7h10v10H7z"/><path d="M4 4h4M16 4h4M4 20h4M16 20h4"/>
+          </svg>
+          마이QR
+        </div>
+        <div class="action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/>
+            <path d="M14 14h2v2h-2zM18 14h2v6h-6v-2h4z"/>
+          </svg>
+          QR스캔
+        </div>
+        <div class="action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="4" y="6" width="16" height="12" rx="2"/><path d="M7 10h6M7 14h10"/>
+          </svg>
+          코드등록
+        </div>
+      </div>
+
+      <div class="sectionTitleRow">
+        <div class="sectionTitle">오름인증</div>
+        <div class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 9l6 6 6-6"/>
           </svg>
         </div>
       </div>
-    </header>
 
-    <main class="content">
       <div class="card">
-        <div class="quickActions">
-          <div class="qa">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M12 6v12M6 12h12" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <div>스탬프</div>
-          </div>
-          <div class="qa">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M7 7h10v10H7z" stroke="#9CA3AF" stroke-width="2"/>
-              <path d="M4 4h4M16 4h4M4 20h4M16 20h4" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <div>마이QR</div>
-          </div>
-          <div class="qa">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" stroke="#9CA3AF" stroke-width="2"/>
-              <path d="M14 14h6v6h-6z" stroke="#9CA3AF" stroke-width="2"/>
-            </svg>
-            <div>QR스캔</div>
-          </div>
-          <div class="qa">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M4 7h16M4 12h16M4 17h10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <div>코드등록</div>
-          </div>
+        <div class="stampImgWrap">
+          <!-- ✅ 3번째 첨부 동그란 이미지(금오름) 넣기: repo에 images/geumoreum.png 로 업로드하세요 -->
+          <img class="stampImg" src="./images/geumoreum.png" alt="금오름 스탬프" />
         </div>
 
-        <div class="row">
-          <div class="sectionTitle">오름인증</div>
-          <div class="chev">⌄</div>
+        <div class="bigName">금오름</div>
+
+        <div>
+          <span class="pill">1 / 5</span>
         </div>
 
-        <div class="oreumImgWrap">
-          <!-- ✅ 여기 이미지 파일을 repo에 업로드해두면 표시됩니다 -->
-          <!-- 파일명: 금오름.jpg -->
-          <img src="./금오름.jpg" alt="금오름" />
+        <div class="meta">
+          금오름<br/>
+          터치 시 1스탬프 적립 (데모)
         </div>
 
-        <div class="shop">
-          <div class="shopLabel">금오름</div>
-          <div class="stampPill"><span id="stampNow">1</span> / 10</div>
-          <div class="sub">금오름<br/>NFC 도장 터치로 인증</div>
-          <div class="sub" style="opacity:.8;">방금</div>
+        <div class="tinyNote">
+          NFC 태그에 저장할 주소 예시: <code>https://(계정).github.io/orakstar/#geumoreum</code>
         </div>
       </div>
 
-      <div style="height:14px"></div>
+      <div class="divider"></div>
 
-      <div class="row">
+      <div class="sectionTitleRow">
         <div class="sectionTitle">참여중인 오름</div>
-        <div class="chev">⌄</div>
-      </div>
-    </main>
-
-    <nav class="bottomNav" aria-label="하단 메뉴">
-      <div class="navItem active">
-        <div class="navIcon">
-          <div class="badgeDot" aria-hidden="true"></div>
-        </div>
-        <div>홈</div>
-      </div>
-
-      <div class="navItem">
-        <div class="navIcon" aria-hidden="true">
-          <!-- 회색 테두리 산모양 아이콘 -->
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M3 18l6.5-10 3.5 5 2-3 6 8H3z" stroke="#9CA3AF" stroke-width="2" stroke-linejoin="round"/>
+        <div class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 15l6-6 6 6"/>
           </svg>
         </div>
-        <div>오름적립</div>
       </div>
 
-      <div class="navItem">
-        <div class="navIcon" aria-hidden="true">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M4 12l4 4 12-12" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+      <div class="card" style="padding:14px 14px 10px;">
+        <div class="meta" style="margin:0;">
+          • 금오름<br/>
+          • 새별오름<br/>
+          • 아부오름<br/>
+          • 다랑쉬오름<br/>
+          • 백약이오름
         </div>
-        <div>스탬프오름</div>
+      </div>
+    </section>
+
+    <!-- 하단 탭바 (요청: 두번째 탭 산 아이콘 + '오름적립') -->
+    <nav class="tabbar" aria-label="하단 메뉴">
+      <div class="tab active">
+        <!-- 홈 아이콘 -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 10.5l9-7 9 7"/>
+          <path d="M9 21V12h6v9"/>
+        </svg>
+        홈
       </div>
 
-      <div class="navItem">
-        <div class="navIcon" aria-hidden="true">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M6 2h12v20H6z" stroke="#9CA3AF" stroke-width="2"/>
-            <path d="M9 6h6M9 10h6" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>가게혜택</div>
+      <div class="tab">
+        <!-- 산 아이콘(회색 테두리 느낌) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 19l7-10 4 6 2-3 5 7H3z"/>
+          <path d="M9.6 9.6l.9-1.3 1.2 1.8"/>
+        </svg>
+        오름적립
       </div>
 
-      <div class="navItem">
-        <div class="navIcon" aria-hidden="true">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-            <path d="M5 6h14" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-            <path d="M5 18h14" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>더보기</div>
+      <div class="tab">
+        <!-- 지도 -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/>
+          <path d="M9 3v15M15 6v15"/>
+        </svg>
+        스탬프투어
+      </div>
+
+      <div class="tab">
+        <!-- 혜택(티켓) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/>
+          <path d="M9 9h6M9 15h6"/>
+        </svg>
+        가게혜택
+      </div>
+
+      <div class="tab">
+        <!-- 더보기 -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M5 12h.01M12 12h.01M19 12h.01"/>
+        </svg>
+        더보기
       </div>
     </nav>
-  </section>
+  </div>
 
   <script>
-    const screen1 = document.getElementById('screen1');
-    const screen2 = document.getElementById('screen2');
-    const btnStart = document.getElementById('btnStart');
-    const stampNow = document.getElementById('stampNow');
-
-    // 데모용: 버튼 클릭 = NFC 터치 성공처럼 화면 전환
-    btnStart.addEventListener('click', () => {
-      screen1.classList.remove('active');
-      screen2.classList.add('active');
-
-      // (데모) 스탬프 카운트 1씩 올리는 흉내
-      let n = Number(localStorage.getItem('stampCount') || '1');
-      stampNow.textContent = n;
-      localStorage.setItem('stampCount', String(Math.min(10, n + 1)));
+    // 화면 전환(스플래시 -> 홈)
+    const splash = document.getElementById('screen-splash');
+    const home = document.getElementById('screen-home');
+    document.getElementById('btnStart').addEventListener('click', () => {
+      splash.classList.remove('active');
+      home.classList.add('active');
+      history.replaceState(null, '', '#geumoreum');
     });
+
+    // URL 해시로 바로 홈 진입 (NFC가 URL#geumoreum 처럼 들어올 때)
+    function bootByHash(){
+      if (location.hash && location.hash.length > 1){
+        splash.classList.remove('active');
+        home.classList.add('active');
+      }
+    }
+    window.addEventListener('hashchange', bootByHash);
+    bootByHash();
+
+    // PWA 서비스워커(선택) - 파일 만들면 자동 등록
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    }
   </script>
 </body>
 </html>
