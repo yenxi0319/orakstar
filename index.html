@@ -482,56 +482,59 @@
     </nav>
   </div>
 
- <script>
-  // 화면 전환(스플래시 -> 홈)
-  const splash = document.getElementById('screen-splash');
-  const home = document.getElementById('screen-home');
-  const more = document.getElementById('screen-more');
-  const memberNumberEl = document.getElementById('memberNumber');
+  <script>
+    // 화면 전환(스플래시 -> 홈)
+    const splash = document.getElementById('screen-splash');
+    const home = document.getElementById('screen-home');
+    document.getElementById('btnStart').addEventListener('click', () => {
+      splash.classList.remove('active');
+      home.classList.add('active');
+      history.replaceState(null, '', '#geumoreum');
+    });
 
-  function showScreen(target) {
-    [splash, home, more].forEach(s => s.classList.remove('active'));
-    target.classList.add('active');
-  }
+    // URL 해시로 바로 홈 진입 (NFC가 URL#geumoreum 처럼 들어올 때)
+    function bootByHash(){
+      if (location.hash && location.hash.length > 1){
+        splash.classList.remove('active');
+        home.classList.add('active');
+      }
+    }
+    window.addEventListener('hashchange', bootByHash);
+    bootByHash();
 
-  document.getElementById('btnStart').addEventListener('click', () => {
-    showScreen(home);
-    history.replaceState(null, '', '#geumoreum');
-  });
+    // PWA 서비스워커(선택) - 파일 만들면 자동 등록
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    }
 
-  // URL 해시로 바로 홈 진입 (NFC가 URL#geumoreum 처럼 들어올 때)
-  function bootByHash() {
-    if (location.hash && location.hash.length > 1) showScreen(home);
-  }
-  window.addEventListener('hashchange', bootByHash);
-  bootByHash();
-
-  // PWA 서비스워커(선택)
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  }
-
-  // ✅ 10자리 회원 고유번호 자동 생성
+<script>
   function generateMemberNumber() {
     let num = '';
-    for (let i = 0; i < 10; i++) num += Math.floor(Math.random() * 10);
+    for (let i = 0; i < 10; i++) {
+      num += Math.floor(Math.random() * 10);
+    }
     return num;
   }
+  // 더보기 클릭 → 3번 화면 전환 + 회원번호 변경
+  const screenHome = document.getElementById('screen-home');
+  const screenMore = document.getElementById('screen-more');
+  const memberNumberEl = document.getElementById('memberNumber');
 
-  // ✅ 더보기 클릭 → 3번 화면 전환 + 번호 변경
-  // (탭 중 “더보기” 글자가 들어있는 항목을 찾아 클릭 이벤트 연결)
   document.querySelectorAll('.tab').forEach(tab => {
-    const label = tab.textContent.replace(/\s/g, ''); // 공백 제거해서 안정적으로 비교
-    if (label.includes('더보기')) {
+    if (tab.textContent.includes('더보기')) {
       tab.addEventListener('click', () => {
-        showScreen(more);
-        if (memberNumberEl) memberNumberEl.textContent = generateMemberNumber();
+        // 화면 전환
+        screenHome.classList.remove('active');
+        screenMore.classList.add('active');
+
+        // 회원 고유번호 새로 생성
+        memberNumberEl.textContent = generateMemberNumber();
       });
     }
-    if (label === '홈') {
-      tab.addEventListener('click', () => showScreen(home));
-    }
   });
+    
 </script>
+    
+  </script>
 </body>
 </html>
