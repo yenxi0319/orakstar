@@ -402,7 +402,7 @@
         </div>
       </div>
     </section>
-<!-- 화면 3: 더보기 -->
+   <!-- 화면 3: 더보기 -->
 <section id="screen-more" class="screen home">
   <div class="topbar">
     <div class="title">더보기</div>
@@ -430,7 +430,7 @@
     </div>
   </div>
 </section>
-   
+
     <!-- 하단 탭바 (요청: 두번째 탭 산 아이콘 + '오름적립') -->
     <nav class="tabbar" aria-label="하단 메뉴">
       <div class="tab active">
@@ -505,6 +505,35 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').catch(()=>{});
     }
+
+<script>
+  function generateMemberNumber() {
+    let num = '';
+    for (let i = 0; i < 10; i++) {
+      num += Math.floor(Math.random() * 10);
+    }
+    return num;
+  }
+  // 더보기 클릭 → 3번 화면 전환 + 회원번호 변경
+  const screenHome = document.getElementById('screen-home');
+  const screenMore = document.getElementById('screen-more');
+  const memberNumberEl = document.getElementById('memberNumber');
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    if (tab.textContent.includes('더보기')) {
+      tab.addEventListener('click', () => {
+        // 화면 전환
+        screenHome.classList.remove('active');
+        screenMore.classList.add('active');
+
+        // 회원 고유번호 새로 생성
+        memberNumberEl.textContent = generateMemberNumber();
+      });
+    }
+  });
+    
+</script>
+    
   </script>
 </body>
 </html>
