@@ -186,11 +186,13 @@
     }
     .chip small{font-weight:700;color:var(--muted)}
     .midCard{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      padding: 14px;
-    }
+  display:flex;
+  flex-direction: column;     /* ✅ 가로 → 세로 */
+  align-items:center;         /* ✅ 가운데 정렬 */
+  text-align:center;          /* ✅ 글씨 가운데 */
+  gap: 10px;
+  padding: 16px 14px 14px;
+}
     .midIcon{
       width: 58px;
       height: 58px;
