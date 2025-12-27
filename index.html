@@ -19,6 +19,28 @@
       --shadow: 0 10px 30px rgba(0,0,0,.08);
       --radius: 18px;
     }
+
+/* 참여중인 오름: 3열 그리드 + 금오름 강조 */
+.oreum-grid{
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 12px; /* 세로, 가로 간격 */
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.oreum-grid span{
+  display: block;
+  color: var(--ink); /* 기본 검정 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+}
+
+.oreum-grid span.active{
+  color: #e11d48; /* 진분홍(로즈 계열) */
+}
+
+    
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -517,16 +539,20 @@
           </div>
         </div>
 
-        <div class="card cardPad">
-          <div class="subtle">참여중인 오름</div>
-          <div style="margin-top:6px; font-weight:900; line-height:1.45;">
-            • 금오름<br/>
-            • 새별오름<br/>
-            • 아부오름<br/>
-            • 다랑쉬오름<br/>
-            • 백약이오름
-          </div>
-        </div>
+<div class="card cardPad">
+  <div class="subtle">참여중인 오름</div>
+
+  <div class="oreum-grid" aria-label="참여중인 오름 목록">
+    <span class="active">금오름</span>
+    <span>새별오름</span>
+    <span>아부오름</span>
+    <span>다랑쉬오름</span>
+    <span>백약이오름</span>
+  </div>
+</div>
+
+
+        
       </section>
 
       <!-- 화면 3 (더보기) -->
