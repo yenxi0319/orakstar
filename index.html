@@ -2,539 +2,610 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>오르락별 : 탐라 스타로드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>오르樂별 웹앱 데모</title>
 
-  <!-- PWA 기본 -->
-  <meta name="theme-color" content="#6E6BEA" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <link rel="manifest" href="./manifest.json" />
-  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <!-- 예쁜 한글 폰트(가벼운 앱 느낌) -->
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
 
   <style>
     :root{
-      --bg:#ffffff;
+      --bg:#f6f7fb;
+      --card:#ffffff;
       --ink:#111827;
       --muted:#6b7280;
       --line:#e5e7eb;
-      --card:#ffffff;
-      --shadow: 0 8px 24px rgba(0,0,0,.08);
-      --radius:18px;
-
-      --grad1:#6E6BEA;
-      --grad2:#7A5EE6;
-      --btn:#ffffff;
-      --btnInk:#4f46e5;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 18px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+      font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
       color:var(--ink);
       background: var(--bg);
     }
 
-    /* 공통: 휴대폰 화면 느낌(데모용) */
+    /* 앱 프레임 (전시용 폰 화면 느낌) */
     .app{
       max-width: 420px;
-      margin: 0 auto;
-      min-height: 100svh;
-      background: var(--bg);
+      margin: 18px auto;
+      padding: 14px;
+    }
+    .phone{
       position: relative;
+      background: var(--bg);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
       overflow: hidden;
+      min-height: 780px;
     }
 
-    /* ===== 화면 1: 스플래시 ===== */
+    /* 화면 전환 */
     .screen{
       display:none;
-      min-height: 100svh;
+      padding-bottom: 84px; /* bottom nav 공간 */
+      min-height: 780px;
     }
     .screen.active{display:block;}
 
-    .splash{
-      background: linear-gradient(180deg, var(--grad1), var(--grad2));
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 24px 18px;
-    }
-    .splash-inner{
-      width:100%;
-      text-align:center;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    .target{
-      width: 92px; height: 92px;
-      margin: 34px auto 18px;
-      position: relative;
-      border-radius: 50%;
-    }
-    .ring, .ring2, .dot{
-      position:absolute; inset:0;
-      margin:auto;
-      border-radius:999px;
-      border: 8px solid rgba(255,255,255,.95);
-    }
-    .ring2{
-      width: 58px; height: 58px;
-      border-width: 7px;
-      animation: pulse 1.6s ease-in-out infinite;
-    }
-    .dot{
-      width: 18px; height: 18px;
-      border-width: 6px;
-      background: rgba(255,255,255,.95);
-    }
-    @keyframes pulse{
-      0%{ transform: scale(0.92); opacity: .85; }
-      50%{ transform: scale(1.06); opacity: 1; }
-      100%{ transform: scale(0.92); opacity: .85; }
-    }
-    .splash h1{
-      font-size: 22px;
-      margin: 10px 0 10px;
-      letter-spacing: -0.4px;
-    }
-    .splash p{
-      margin: 0 0 22px;
-      opacity: .92;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    .btn{
-      border:0;
-      background: var(--btn);
-      color: var(--btnInk);
-      font-weight: 700;
-      font-size: 16px;
-      padding: 14px 22px;
-      border-radius: 999px;
-      box-shadow: 0 10px 26px rgba(0,0,0,.18);
-      cursor:pointer;
-    }
-    .hint{
-      margin-top: 12px;
-      font-size: 12px;
-      opacity: .85;
-    }
-
-    /* ===== 화면 2: 홈(예시) ===== */
-    .home{
-      padding: 18px 18px 92px;
-      padding-top: calc(18px + env(safe-area-inset-top));
-      background: #fff;
-    }
-
+    /* 상단바 */
     .topbar{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      padding: 16px 16px 10px;
     }
     .title{
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-top: 2px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 280px;
     }
     .top-icons{
       display:flex;
-      gap:14px;
+      gap: 10px;
       align-items:center;
-      color: var(--muted);
-      margin-top: 2px;
     }
     .iconbtn{
-      width: 28px; height: 28px;
-      display:grid; place-items:center;
+      width: 34px;
+      height: 34px;
+      display:grid;
+      place-items:center;
+      border-radius: 12px;
+      background:#fff;
+      border:1px solid var(--line);
     }
-    .iconbtn svg{width:22px;height:22px; opacity:.65}
+    .iconbtn svg{
+      width: 20px;
+      height: 20px;
+      overflow: visible; /* 아이콘 잘림 방지 */
+    }
 
-    .actionRow{
+    /* 카드 */
+    .card{
+      margin: 0 16px 12px;
+      background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 10px;
-      display:flex;
-      justify-content:space-between;
-      margin: 8px 0 18px;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 18px rgba(0,0,0,.05);
     }
-    .action{
-      width: 25%;
-      text-align:center;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.1;
-    }
-    .action svg{
-      width: 22px; height: 22px;
-      display:block; margin: 0 auto 6px;
-      opacity: .55;
-    }
+    .cardPad{ padding: 14px; }
 
-    .sectionTitleRow{
+    .row{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin: 2px 0 10px;
+      gap:12px;
     }
-    .sectionTitle{
-      font-size: 16px;
+    .subtle{ color: var(--muted); font-size: 13px; }
+    .meta{ color: var(--muted); font-size: 14px; line-height: 1.35; }
+
+    /* 화면1: 원형 펄스 */
+    .hero{
+      padding: 28px 16px 10px;
+      text-align:center;
+    }
+    .hero h1{
+      margin: 6px 0 6px;
+      font-size: 20px;
+      letter-spacing:-0.3px;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .pulseWrap{
+      margin: 22px auto 14px;
+      width: 190px;
+      height: 190px;
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+    .pulseCircle{
+      width: 118px;
+      height: 118px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 22px rgba(0,0,0,.08);
+      display:grid;
+      place-items:center;
       font-weight: 800;
       letter-spacing: -0.3px;
     }
-    .chev svg{width:20px;height:20px; opacity:.5}
-
-    .card{
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 14px;
-      box-shadow: 0 10px 22px rgba(0,0,0,.04);
-      background: var(--card);
-    }
-
-    .stampImgWrap{
-      display:flex;
-      justify-content:center;
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-    .stampImg{
-      width: 122px;
-      height: 122px;
-      object-fit: contain;
-      border-radius: 22px;
-      background: #fff;
-    }
-    .bigName{
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: -0.6px;
-      margin: 4px 0 8px;
-      text-align:left;
-    }
-
-    .pill{
-      display:inline-block;
-      padding: 8px 12px;
+    .pulseRing{
+      position:absolute;
+      inset: 0;
       border-radius: 999px;
-      background:#f3f4f6;
+      border: 2px solid rgba(17,24,39,.12);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    .pulseRing:nth-child(1){ transform: scale(.85); opacity:.55; }
+    .pulseRing:nth-child(2){ transform: scale(1.05); opacity:.35; animation-delay:.25s; }
+    .pulseRing:nth-child(3){ transform: scale(1.25); opacity:.2; animation-delay:.45s; }
+
+    @keyframes pulse{
+      0%{ transform: scale(.9); opacity:.55; }
+      50%{ transform: scale(1.05); opacity:.25; }
+      100%{ transform: scale(.9); opacity:.55; }
+    }
+
+    .primaryBtn{
+      width: calc(100% - 32px);
+      margin: 8px 16px 0;
+      padding: 14px 14px;
+      border:none;
+      border-radius: 14px;
+      background:#111827;
+      color:#fff;
       font-weight: 800;
-      font-size: 13px;
-      color:#111827;
-      margin-right: 10px;
-    }
-    .meta{
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-      margin-top: 6px;
+      letter-spacing: -0.2px;
+      cursor:pointer;
     }
 
-    .divider{
-      height: 14px;
-    }
-
-    /* 하단 탭바 */
-    .tabbar{
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 0;
-      width: min(420px, 100%);
+    /* 화면2: 홈(요청 반영) */
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
       background:#fff;
-      border-top: 1px solid var(--line);
-      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+      font-size: 13px;
+      color: #111827;
+      font-weight: 700;
+    }
+    .chip small{font-weight:700;color:var(--muted)}
+    .midCard{
       display:flex;
-      justify-content:space-between;
-      gap: 6px;
-      z-index: 10;
+      align-items:center;
+      gap: 12px;
+      padding: 14px;
     }
-    .tab{
-      width: 20%;
-      text-align:center;
-      color: #9ca3af;
-      font-size: 11px;
+    .midIcon{
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background:#fff;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      flex: 0 0 auto;
     }
-    .tab svg{
-      width: 22px; height: 22px;
-      display:block; margin: 0 auto 6px;
-      opacity: .75;
-       fill: #9ca3af;
+    .midIcon img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-    .tab.active{ color:#111827; }
-    .tab.active svg{ opacity: 1; }
-
-    /* 작은 도움말 */
-    .tinyNote{
-      margin-top: 14px;
-      font-size: 12px;
+    .midText .kicker{
       color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
     }
-    .tinyNote code{
-      background:#f3f4f6;
-      padding:2px 6px;
-      border-radius: 8px;
+    .midText .place{
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing:-0.3px;
+      margin-bottom: 2px;
+    }
+    .actions{
+      display:flex;
+      gap: 10px;
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--line);
+    }
+    .actionBtn{
+      flex:1;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight: 800;
+      cursor:pointer;
+    }
+    .actionBtn svg{ width:18px; height:18px; }
+
+    /* 하단 내비게이션 */
+    .bottomnav{
+      position: absolute;
+      left:0; right:0; bottom:0;
+      height: 74px;
+      background:#fff;
+      border-top:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-around;
+      padding: 8px 8px 10px;
+    }
+    .navItem{
+      width: 20%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 700;
+      user-select:none;
+    }
+    .navItem svg{ width: 22px; height: 22px; }
+    .navItem.active{ color:#111827; }
+    .navItem.tappable{ cursor:pointer; } /* 손모양 */
+
+    /* 더보기(점3개) - 오른쪽 하단 강조 */
+    .navMoreIcon{
+      width: 22px; height:22px;
+      display:grid; place-items:center;
+    }
+
+    /* 화면3: 더보기 */
+    .profileCard{
+      display:flex;
+      align-items:center;
+      gap: 14px;
+      padding: 14px;
+    }
+    .bronzeBadge{
+      width: 56px; height: 56px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      background: radial-gradient(circle at 30% 30%, #ffd6a3, #b5672e 55%, #7a3d12 100%);
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 18px rgba(0,0,0,.10);
+      flex: 0 0 auto;
+    }
+    .profileText .label{
+      font-size: 13px;
+      font-weight: 800;
+      color:#111827;
+      letter-spacing:-0.2px;
+    }
+    .profileText .id{
+      margin-top: 6px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .menuGrid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 14px;
+    }
+    .menuItem{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 12px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      cursor:pointer;
+    }
+    .menuItem svg{ width:22px; height:22px; color:#111827; }
+    .menuItem .txt{
+      font-weight: 900;
+      letter-spacing:-0.2px;
     }
   </style>
 </head>
 
 <body>
   <div class="app">
-    <!-- 화면 1: 스플래시 (요청 1번 화면 느낌) -->
-    <section id="screen-splash" class="screen splash active">
-      <div class="splash-inner">
-        <div class="target" aria-hidden="true">
-          <div class="ring"></div>
-          <div class="ring2"></div>
-          <div class="dot"></div>
-        </div>
-        <h1>NFC 도장을 가져다 대세요</h1>
-        <p>휴대폰을 NFC 태그에 가까이 대면 자동으로 인식됩니다</p>
-        <button class="btn" id="btnStart">NFC 읽기 시작</button>
-        <div class="hint">데모용: 버튼을 누르면 ‘홈’ 화면으로 전환됩니다</div>
-      </div>
-    </section>
+    <div class="phone">
 
-    <!-- 화면 2: 홈 (요청 2번 화면 커스텀) -->
-    <section id="screen-home" class="screen home">
-      <div class="topbar">
-        <div class="title">오르樂별 : 탐라 스타로드</div>
-        <div class="top-icons">
-          <div class="iconbtn" title="내쿠폰함(예시)">
-            <!-- 쿠폰 아이콘 -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/>
-              <path d="M9 9h.01M15 15h.01"/>
-            </svg>
-          </div>
-          <div class="iconbtn" title="알림(예시)">
-            <!-- 벨 아이콘 -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7"/>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            </svg>
+      <!-- 화면 1 -->
+      <section id="screen-1" class="screen active">
+        <div class="hero">
+          <h1>오르樂별 NFC 체험</h1>
+          <p>가운데 원을 터치하면 “홈(오름인증)” 화면으로 넘어갑니다</p>
+
+          <div class="pulseWrap">
+            <div class="pulseRing"></div>
+            <div class="pulseRing"></div>
+            <div class="pulseRing"></div>
+            <div class="pulseCircle">TAP</div>
           </div>
         </div>
-      </div>
 
-      <div class="actionRow">
-        <div class="action">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M12 5v14M5 12h14"/>
+        <button class="primaryBtn" id="goHomeBtn">체험 시작</button>
+
+        <div class="card cardPad" style="margin-top:14px;">
+          <div class="subtle">전시용 안내</div>
+          <div style="margin-top:6px; font-weight:900;">
+            NFC 또는 QR로 웹앱이 열리는 데모입니다.
+          </div>
+        </div>
+      </section>
+
+      <!-- 화면 2 (홈) -->
+      <section id="screen-home" class="screen">
+        <div class="topbar">
+          <div class="title">오르讀별 : 탐라 스타로드</div>
+          <div class="top-icons">
+            <div class="iconbtn" title="쿠폰(예시)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/>
+                <path d="M9 9h.01M15 15h.01"/>
+              </svg>
+            </div>
+            <div class="iconbtn" title="알림(예시)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5"/>
+                <path d="M9 17a3 3 0 0 0 6 0"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardPad row">
+            <div class="chip"><small>적립중인</small> 오름인증</div>
+            <div class="chip"><small>스탬프</small> 0 / 5</div>
+          </div>
+
+          <div class="midCard">
+            <div class="midIcon" title="금오름 이미지(예시)">
+              <!-- 사용자가 올린 3번째 동그란 이미지(금오름.jpg)를 repo에 업로드했다면, 경로를 맞추세요 -->
+              <img src="금오름.jpg" alt="금오름" />
+            </div>
+            <div class="midText">
+              <div class="kicker">오름인증</div>
+              <div class="place">금오름</div>
+              <div class="meta">NFC 도장 터치 시<br/>스탬프 1개 적립(데모)</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="actionBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              스탬프
+            </button>
+            <button class="actionBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+              </svg>
+              안내
+            </button>
+          </div>
+        </div>
+
+        <div class="card cardPad">
+          <div class="subtle">참여중인 오름</div>
+          <div style="margin-top:6px; font-weight:900; line-height:1.45;">
+            • 금오름<br/>
+            • 새별오름<br/>
+            • 아부오름<br/>
+            • 다랑쉬오름<br/>
+            • 백약이오름
+          </div>
+        </div>
+      </section>
+
+      <!-- 화면 3 (더보기) -->
+      <section id="screen-more" class="screen">
+        <div class="topbar">
+          <div class="title">더보기</div>
+          <div class="top-icons">
+            <div class="iconbtn" title="설정">
+              <!-- 톱니(설정) 아이콘: viewBox/overflow로 잘림 방지 -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                <path d="M19.4 15a7.9 7.9 0 0 0 .1-1 7.9 7.9 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a7.5 7.5 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.9 7.9 0 0 0-.1 1 7.9 7.9 0 0 0 .1 1l-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1l.4 2.6h4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4-2-1.6z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="profileCard">
+            <div class="bronzeBadge">B</div>
+            <div class="profileText">
+              <div class="label">회원 고유번호</div>
+              <div class="id" id="memberId">0000000000</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="menuGrid">
+            <div class="menuItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M7 14l4-4 4 3 5-7"/>
+              </svg>
+              <div class="txt">이용현황</div>
+            </div>
+            <div class="menuItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/>
+              </svg>
+              <div class="txt">내쿠폰함</div>
+            </div>
+            <div class="menuItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              </svg>
+              <div class="txt">북마크</div>
+            </div>
+            <div class="menuItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+              <div class="txt">도입/요청</div>
+            </div>
+            <div class="menuItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6h16"/>
+                <path d="M4 12h16"/>
+                <path d="M4 18h16"/>
+              </svg>
+              <div class="txt">공지사항</div>
+            </div>
+            <div class="menuItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/>
+                <path d="M12 3v13"/>
+                <path d="M7 8l5-5 5 5"/>
+              </svg>
+              <div class="txt">프로모션</div>
+            </div>
+            <div class="menuItem" style="grid-column: 1 / span 2;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+              </svg>
+              <div class="txt">고객센터</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 하단 내비게이션(모든 화면 공통으로 고정) -->
+      <nav class="bottomnav" aria-label="Bottom Navigation">
+        <div class="navItem tappable" id="navHome">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10.5L12 3l9 7.5"/>
+            <path d="M5 10v10h14V10"/>
           </svg>
-          스탬프
+          <div>홈</div>
         </div>
-        <div class="action">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M7 7h10v10H7z"/><path d="M4 4h4M16 4h4M4 20h4M16 20h4"/>
+
+        <div class="navItem">
+          <!-- 회색 테두리 산모양 + 오름적립 -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 19h18"/>
+            <path d="M6 19l6-10 6 10"/>
+            <path d="M10 12l2-3 2 3"/>
           </svg>
-          마이QR
+          <div>오름적립</div>
         </div>
-        <div class="action">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/>
-            <path d="M14 14h2v2h-2zM18 14h2v6h-6v-2h4z"/>
+
+        <div class="navItem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21s8-4.5 8-11a8 8 0 1 0-16 0c0 6.5 8 11 8 11z"/>
+            <path d="M12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
           </svg>
-          QR스캔
-        </div>
-        <div class="action">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="4" y="6" width="16" height="12" rx="2"/><path d="M7 10h6M7 14h10"/>
-          </svg>
-          코드등록
-        </div>
-      </div>
-
-      <div class="sectionTitleRow">
-        <div class="sectionTitle">오름인증</div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M6 9l6 6 6-6"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="stampImgWrap">
-          <!-- ✅ 3번째 첨부 동그란 이미지(금오름) 넣기: repo에 images/geumoreum.png 로 업로드하세요 -->
-          <img class="stampImg" src="./geumoreum.png" alt="금오름 스탬프" />
+          <div>지도</div>
         </div>
 
-        <div class="bigName">금오름</div>
-
-        <div>
-          <span class="pill">1 / 5</span>
+        <!-- ✅ 오른쪽 하단 “점3개 + 더보기” : 클릭/손모양/화면전환 핵심 -->
+        <div class="navItem tappable active" id="navMore">
+          <div class="navMoreIcon" aria-hidden="true">
+            <!-- 점3개 아이콘 -->
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="6" cy="12" r="1.8"></circle>
+              <circle cx="12" cy="12" r="1.8"></circle>
+              <circle cx="18" cy="12" r="1.8"></circle>
+            </svg>
+          </div>
+          <div>더보기</div>
         </div>
+      </nav>
 
-        <div class="meta">
-          금오름<br/>
-          터치 시 1스탬프 적립 (데모)
-        </div>
-
-        <div class="tinyNote">
-          NFC 태그에 저장할 주소 예시: <code>https://(계정).github.io/orakstar/#geumoreum</code>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="sectionTitleRow">
-        <div class="sectionTitle">참여중인 오름</div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M6 15l6-6 6 6"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="card" style="padding:14px 14px 10px;">
-        <div class="meta" style="margin:0;">
-          • 금오름<br/>
-          • 새별오름<br/>
-          • 아부오름<br/>
-          • 다랑쉬오름<br/>
-          • 백약이오름
-        </div>
-      </div>
-    </section>
-    
-   <!-- 화면 3: 더보기 -->
-<section id="screen-more" class="screen home">
-  <div class="topbar">
-    <div class="title">더보기</div>
-    <div class="top-icons">
-      <!-- 설정 아이콘 -->
-      <div class="iconbtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-          <path d="M19.4 15a1.6 1.6 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.6 1.6 0 0 0 15 19.4a1.6 1.6 0 0 0-1 .6 1.6 1.6 0 0 0-.3 1.9 2 2 0 1 1-3.4 0 1.6 1.6 0 0 0-.3-1.9 1.6 1.6 0 0 0-1-.6 1.6 1.6 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.6 1.6 0 0 0 4.6 15a1.6 1.6 0 0 0-.6-1 1.6 1.6 0 0 0-1.9-.3 2 2 0 1 1 0-3.4 1.6 1.6 0 0 0 1.9-.3 1.6 1.6 0 0 0 .6-1 1.6 1.6 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.6 1.6 0 0 0 9 4.6c.37 0 .72-.13 1-.36a1.6 1.6 0 0 0 .3-1.9 2 2 0 1 1 3.4 0 1.6 1.6 0 0 0 .3 1.9c.28.23.63.36 1 .36a1.6 1.6 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.44.44-.58 1.1-.33 1.82.13.37.36.72.6 1 .23.28.36.63.36 1z"/>
-        </svg>
-      </div>
     </div>
-  </div>
-
-  <div style="text-align:center; margin-top:40px;">
-    <div style="width:72px;height:72px;border-radius:50%;background:#f3f4f6;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;">
-      B
-    </div>
-
-    <div id="memberNumber" style="font-size:26px;font-weight:900;letter-spacing:1px;">
-      0000000000
-    </div>
-    <div style="color:#6b7280;margin-top:6px;">
-      회원 고유번호
-    </div>
-  </div>
-</section>
-
-    <!-- 하단 탭바 (요청: 두번째 탭 산 아이콘 + '오름적립') -->
-    <nav class="tabbar" aria-label="하단 메뉴">
-      <div class="tab active">
-        <!-- 홈 아이콘 -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M3 10.5l9-7 9 7"/>
-          <path d="M9 21V12h6v9"/>
-        </svg>
-        홈
-      </div>
-
-      <div class="tab">
-        <!-- 산 아이콘(회색 테두리 느낌) -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M3 19l7-10 4 6 2-3 5 7H3z"/>
-          <path d="M9.6 9.6l.9-1.3 1.2 1.8"/>
-        </svg>
-        오름적립
-      </div>
-
-      <div class="tab">
-        <!-- 지도 -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/>
-          <path d="M9 3v15M15 6v15"/>
-        </svg>
-        스탬프투어
-      </div>
-
-      <div class="tab">
-        <!-- 혜택(티켓) -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"/>
-          <path d="M9 9h6M9 15h6"/>
-        </svg>
-        가게혜택
-      </div>
-
-      <div class="tab">
-       <!-- 점 3개 아이콘 -->
-  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-    <circle cx="5" cy="12" r="1.8"></circle>
-    <circle cx="12" cy="12" r="1.8"></circle>
-    <circle cx="19" cy="12" r="1.8"></circle>
-  </svg>
-  더보기
-     </div>
-    </nav>
   </div>
 
   <script>
-    // 화면 전환(스플래시 -> 홈)
-    const splash = document.getElementById('screen-splash');
-    const home = document.getElementById('screen-home');
-    document.getElementById('btnStart').addEventListener('click', () => {
-      splash.classList.remove('active');
-      home.classList.add('active');
-      history.replaceState(null, '', '#geumoreum');
+    // ===== 화면 전환 유틸 =====
+    const screens = {
+      s1: document.getElementById('screen-1'),
+      home: document.getElementById('screen-home'),
+      more: document.getElementById('screen-more'),
+    };
+
+    const navHome = document.getElementById('navHome');
+    const navMore = document.getElementById('navMore');
+    const memberIdEl = document.getElementById('memberId');
+
+    function setActiveNav(which){
+      // nav active 스타일(선택)
+      navHome.classList.remove('active');
+      navMore.classList.remove('active');
+      if(which === 'home') navHome.classList.add('active');
+      if(which === 'more') navMore.classList.add('active');
+    }
+
+    function showScreen(name){
+      Object.values(screens).forEach(el => el.classList.remove('active'));
+      screens[name].classList.add('active');
+
+      if(name === 'home') setActiveNav('home');
+      if(name === 'more') setActiveNav('more');
+    }
+
+    // ===== 10자리 회원 고유번호 자동 생성 =====
+    function generate10DigitId(){
+      // 1000000000 ~ 9999999999 (10자리 보장)
+      const n = Math.floor(1000000000 + Math.random() * 9000000000);
+      return String(n);
+    }
+
+    function refreshMemberId(){
+      memberIdEl.textContent = generate10DigitId();
+    }
+
+    // ===== 이벤트 연결(핵심) =====
+    document.getElementById('goHomeBtn').addEventListener('click', () => {
+      showScreen('home');
     });
 
-    // URL 해시로 바로 홈 진입 (NFC가 URL#geumoreum 처럼 들어올 때)
-    function bootByHash(){
-      if (location.hash && location.hash.length > 1){
-        splash.classList.remove('active');
-        home.classList.add('active');
-      }
-    }
-    window.addEventListener('hashchange', bootByHash);
-    bootByHash();
+    // ✅ 하단 “점3개+더보기” 클릭 → 3번 화면 + 번호 변경
+    navMore.addEventListener('click', () => {
+      showScreen('more');
+      refreshMemberId();
+    });
 
-    // PWA 서비스워커(선택) - 파일 만들면 자동 등록
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(()=>{});
-    }
+    // 홈 탭 클릭
+    navHome.addEventListener('click', () => {
+      showScreen('home');
+    });
 
-<script>
-  function generateMemberNumber() {
-    let num = '';
-    for (let i = 0; i < 10; i++) {
-      num += Math.floor(Math.random() * 10);
-    }
-    return num;
-  }
-  // 더보기 클릭 → 3번 화면 전환 + 회원번호 변경
-  const screenHome = document.getElementById('screen-home');
-  const screenMore = document.getElementById('screen-more');
-  const memberNumberEl = document.getElementById('memberNumber');
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    if (tab.textContent.includes('더보기')) {
-      tab.addEventListener('click', () => {
-        // 화면 전환
-        screenHome.classList.remove('active');
-        screenMore.classList.add('active');
-
-        // 회원 고유번호 새로 생성
-        memberNumberEl.textContent = generateMemberNumber();
-      });
-    }
-  });
-    
-</script>
-    
+    // 화면3 처음 들어갈 때도 1회 생성
+    refreshMemberId();
   </script>
 </body>
 </html>
