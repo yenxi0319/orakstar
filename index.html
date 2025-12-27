@@ -530,12 +530,14 @@
               </svg>
               스탬프
             </button>
-            <button class="actionBtn" type="button">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
-              </svg>
-              안내
-            </button>
+            
+           <button class="actionBtn" type="button" id="btnGuide">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+  </svg>
+  안내
+</button>
+
           </div>
         </div>
 
@@ -633,6 +635,65 @@
           </div>
         </div>
       </section>
+
+<!-- 화면 4 (AR 체험) -->
+<section id="screen-ar" class="screen">
+  <div class="topbar">
+    <div class="title">AR 체험</div>
+    <div class="top-icons">
+      <button class="iconbtn tappable" id="btnArClose" title="닫기" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="arStage">
+    <!-- 카메라 -->
+    <video id="arVideo" autoplay playsinline muted></video>
+
+    <!-- 오버레이 UI -->
+    <div class="arHud">
+      <div class="arChip">
+        <span class="dot"></span>
+        카메라 ON · CamelliaFairy를 눌러보세요
+      </div>
+
+      <div class="pointChip">
+        포인트 <b id="pointValue">0</b>P
+      </div>
+    </div>
+
+    <!-- 요정(클릭 대상) -->
+    <button id="fairy" class="fairy tappable" type="button" aria-label="CamelliaFairy">
+      ✨🧚
+      <span class="fairyName">CamelliaFairy</span>
+    </button>
+
+    <!-- 구름(시간 지연 후 등장) -->
+    <button id="cloud" class="cloud tappable" type="button" aria-label="구름 아이콘">
+      ☁️
+    </button>
+
+    <!-- 팝업(공통) -->
+    <div id="popup" class="popup" aria-hidden="true">
+      <div class="popupCard">
+        <div class="popupTitle" id="popupTitle">제목</div>
+        <div class="popupBody" id="popupBody">내용</div>
+
+        <div class="popupActions">
+          <button class="ghostBtn tappable" id="popupClose" type="button">닫기</button>
+          <button class="primaryMini tappable" id="popupNext" type="button">다 읽었어요</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+      
 
       <!-- 하단 내비게이션(모든 화면 공통으로 고정) -->
       <nav class="bottomnav" aria-label="Bottom Navigation">
