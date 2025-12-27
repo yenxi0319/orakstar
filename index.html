@@ -1053,6 +1053,7 @@ button{
     home: document.getElementById('screen-home'),
     more: document.getElementById('screen-more'),
     ar: document.getElementById('screen-ar'),
+    stamps: document.getElementById('screen-stamps'),
   };
 
   function showScreen(name){
@@ -1316,6 +1317,16 @@ const navMore = document.getElementById('navMore');
 navMore?.addEventListener('click', () => {
   showScreen('more'); // 3번 화면 id
 });
+
+  // 오름적립 버튼 → 5번 화면
+const navStamps = document.getElementById('navStamps');
+navStamps?.addEventListener('click', () => {
+  showScreen('stamps');
+});
+
+// (옵션) 오름적립 화면 닫기 버튼 → 홈으로
+const btnStampsClose = document.getElementById('btnStampsClose');
+btnStampsClose?.addEventListener('click', () => showScreen('home'));
 
 
 
