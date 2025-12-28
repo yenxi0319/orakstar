@@ -597,6 +597,52 @@ button{
   gap: 10px;
   z-index: 5;
 }
+
+    /* ===== (추가) AR 왼쪽 상단 HUD (오름 정보) ===== */
+.oreumHud{
+  position:absolute;
+  left: 12px;
+  top: 62px; /* 기존 arHud(상단칩)와 겹치면 52~70 사이로 조정 */
+  z-index: 8;
+  width: min(260px, calc(100% - 24px));
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(229,231,235,.92);
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.12);
+  backdrop-filter: blur(6px);
+}
+
+.oreumHud .hudTitle{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  font-weight: 900;
+  letter-spacing: -.2px;
+  font-size: 13.5px;
+}
+
+.oreumHud .pin{
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ef4444; /* 빨간 핀 느낌 */
+  flex: 0 0 auto;
+}
+
+.oreumHud .hudBody{
+  margin-top: 6px;
+  color: #111827;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.oreumHud .hudBody b{
+  font-weight: 900;
+}
+
+    
 .arChip{
   flex: 1;
   display:flex;
@@ -1085,6 +1131,23 @@ img[src$="present2.png"]{
         <span class="dot"></span>
         카메라 ON · 동백요정을 눌러보세요
       </div>
+
+<!-- ✅ 왼쪽 상단 오름 HUD -->
+<div class="oreumHud" id="oreumHud" aria-label="오름 정보 HUD">
+  <div class="hudTitle">
+    <span class="pin"></span>
+    <span id="hudOreumName">금오름 정상</span>
+  </div>
+  <div class="hudBody" id="hudOreumMeta">
+위치: <b>33.354°N</b>, <b>126.289°E</b>
+고도: <b>519m</b>
+기온: <b>18°C</b>
+  </div>
+</div>
+
+
+
+      
 
      <div class="pointChip">
   <img src="coin2.png" alt="coin">
