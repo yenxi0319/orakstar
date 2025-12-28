@@ -1551,6 +1551,17 @@ if (btnPointsClose){
 }
 
 
+// ✅ 더보기(3번) -> 내쿠폰함(8번)
+const menuCoupons = document.getElementById('menuCoupons');
+menuCoupons?.addEventListener('click', () => showScreen('couponbox'));
+
+// ✅ 내쿠폰함(8번) 닫기 -> 더보기(3번)
+const btnCouponBoxClose = document.getElementById('btnCouponBoxClose');
+btnCouponBoxClose?.addEventListener('click', () => showScreen('more'));
+
+
+
+  
   
   /* ====== 2번(홈) 안내 버튼 → 4번(AR) ====== */
   const btnGuide = document.getElementById('btnGuide');
