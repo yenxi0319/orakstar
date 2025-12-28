@@ -432,6 +432,65 @@ button{
 }
 
 
+/* ===== 8번 화면(내쿠폰함) ===== */
+.myCouponGrid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.myCouponCard{
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 12px;
+  background:#fff;
+  box-shadow: 0 8px 18px rgba(0,0,0,.05);
+  text-align:center;
+}
+
+.myCouponIcon{
+  height: 78px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom: 8px;
+}
+
+.myCouponIcon img{
+  height: 72px;
+  width: auto;
+  object-fit: contain;
+  display:block;
+}
+
+.myCouponTitle{
+  font-weight: 900;
+  letter-spacing: -.2px;
+  margin-top: 2px;
+}
+
+.myCouponMeta{
+  color: var(--muted);
+  font-size: 12.5px;
+  margin-top: 6px;
+}
+
+.myCouponUseBtn{
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-weight: 900;
+  border: 1px solid var(--line);
+  background:#111827;
+  color:#fff;
+}
+
+
+
+
+
+    
 /* ===== 화면7(포인트/코인) ===== */
 .coinPile{
   width: 110px;
@@ -1079,6 +1138,54 @@ img[src$="present2.png"]{
         </div>
       </section>
 
+
+<!-- =========================
+     8번 화면 : 내쿠폰함
+========================= -->
+<section id="screen-couponbox" class="screen">
+  <div class="topbar">
+    <div class="title">내쿠폰함</div>
+    <div class="top-icons">
+      <button class="iconbtn tappable" id="btnCouponBoxClose" title="닫기" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="card cardPad">
+    <div style="font-weight:900; letter-spacing:-.2px;">보유 쿠폰</div>
+    <div class="subtle" style="margin-top:6px;">전시용 데모: 2종 쿠폰이 들어있습니다.</div>
+  </div>
+
+  <div class="card cardPad">
+    <div class="myCouponGrid" aria-label="내 쿠폰 목록">
+      <!-- 아메리카노 1잔 -->
+      <div class="myCouponCard">
+        <div class="myCouponIcon">
+          <img src="americano.png" alt="아메리카노 쿠폰">
+        </div>
+        <div class="myCouponTitle">아메리카노 1잔</div>
+        <div class="myCouponMeta">사용기한: 2026-12-31 · 1회</div>
+        <button class="myCouponUseBtn" type="button">사용하기</button>
+      </div>
+
+      <!-- 제주 굿즈 5% 할인 -->
+      <div class="myCouponCard">
+        <div class="myCouponIcon">
+          <img src="present.png" alt="제주 굿즈 할인 쿠폰">
+        </div>
+        <div class="myCouponTitle">제주 굿즈 5% 할인</div>
+        <div class="myCouponMeta">사용기한: 2026-12-31 · 1회</div>
+        <button class="myCouponUseBtn" type="button">사용하기</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
 <!-- =========================
      6번 화면 : 지도(금오름 위치)
 ========================= -->
@@ -1413,6 +1520,7 @@ img[src$="present2.png"]{
     stamps: document.getElementById('screen-stamps'),
     map: document.getElementById('screen-map'), // map 이 줄 추가
     points: document.getElementById('screen-points'), // points 줄 추가
+    couponbox: document.getElementById('screen-couponbox'),//8번 화면 추가
   };
 
   function showScreen(name){
