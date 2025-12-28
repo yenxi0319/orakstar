@@ -685,7 +685,79 @@ button{
 #screen-more .iconbtn svg{ width:20px; height:20px; }
 
 
+/* ===== 지도 화면 ===== */
+#screen-map .moreTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:22px 18px 8px;
+}
+#screen-map .moreTitle{
+  font-size:34px;
+  font-weight:800;
+  letter-spacing:-.02em;
+}
 
+.mapWrap{
+  padding:8px 18px 110px; /* 아래 nav 공간 확보 */
+}
+.mapBox{
+  position:relative;
+  height:420px;
+  border-radius:18px;
+  overflow:hidden;
+  background:#f4f6f8;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+}
+
+/* 데모용 지도 배경(심플) */
+.mapBg{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1200px 600px at 70% 20%, rgba(230,230,255,.55), transparent 60%),
+    radial-gradient(900px 500px at 30% 70%, rgba(230,255,240,.6), transparent 55%),
+    linear-gradient(180deg, #fafafa, #f1f3f6);
+}
+
+/* 마커 버튼 */
+.mapMarker{
+  position:absolute;
+  left:62%;
+  top:54%;
+  transform:translate(-50%,-100%);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  box-shadow: 0 12px 26px rgba(0,0,0,.12);
+  cursor:pointer;
+}
+.mapMarker:active{ transform:translate(-50%,-100%) scale(.98); }
+
+.mapMarker .pin{
+  width:16px; height:16px;
+  border-radius:999px;
+  background:#ff3b7a; /* 포인트색 */
+  box-shadow: 0 0 0 6px rgba(255,59,122,.18);
+}
+.mapMarker .label{
+  font-weight:800;
+  letter-spacing:-.02em;
+}
+
+/* 안내 문구 */
+.mapHint{
+  margin-top:12px;
+  color:rgba(0,0,0,.55);
+  font-size:13px;
+}
+
+
+
+    
 
     
   </style>
@@ -1055,8 +1127,34 @@ button{
 </section>
 
   
+<!-- 6번: 지도 화면 -->
+<section class="screen" id="screen-map" aria-label="지도">
+  <div class="moreTop">
+    <div class="moreTitle">지도</div>
+  </div>
+
+  <div class="mapWrap">
+    <div class="mapBox">
+      <!-- 데모용 지도(심플) : 실제 지도 API 없이도 시연 가능 -->
+      <div class="mapBg" aria-hidden="true"></div>
+
+      <!-- 금오름 마커 (클릭 → AR로 이동) -->
+      <button class="mapMarker tappable" id="btnGeumoreumMarker" type="button" aria-label="금오름 위치">
+        <span class="pin" aria-hidden="true"></span>
+        <span class="label">금오름</span>
+      </button>
+    </div>
+
+    <div class="mapHint">마커를 누르면 금오름 AR 체험으로 이동합니다.</div>
+  </div>
+</section>
 
 
+
+
+
+
+      
       
 
       <!-- 하단 내비게이션(모든 화면 공통으로 고정) -->
@@ -1370,6 +1468,59 @@ function addPoints(p){
 
 
 /* ===== 2번 화면 하단 네비게이션 ===== */
+
+const navHome  = document.getElementById('navHome');
+const navMore  = document.getElementById('navMore');
+const navMap   = document.getElementById('navMap');
+const navStamp = document.getElementById('navStamp'); // 있으면 사용
+
+function setNavActive(id){
+  document.querySelectorAll('.bottomnav .navItem').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+}
+
+// 홈 → 2번(홈) 화면으로 보내는게 맞으면 home, 1번으로 보내려면 s1
+navHome?.addEventListener('click', () => {
+  showScreen('s1');           // 지금 코드 기준(홈 버튼 → 1번 화면)
+  setNavActive('navHome');
+});
+
+// 더보기(점3개) → 3번
+navMore?.addEventListener('click', () => {
+  showScreen('more');
+  setNavActive('navMore');
+});
+
+// 지도 → 6번(지도)
+navMap?.addEventListener('click', () => {
+  showScreen('map');
+  setNavActive('navMap');
+});
+
+// 오름적립(있으면) → 일단 홈으로 연결(원하시면 스탬프 화면 따로 만들면 거기로 연결)
+navStamp?.addEventListener('click', () => {
+  // showScreen('stamp');  // (추후 스탬프 화면 만들면 이걸로)
+  showScreen('home');
+  setNavActive('navStamp');
+});
+
+/* ===== 지도 마커 클릭 → 금오름 AR 체험 바로 연결 ===== */
+const btnGeumoreumMarker = document.getElementById('btnGeumoreumMarker');
+btnGeumoreumMarker?.addEventListener('click', async () => {
+  showScreen('ar');
+  // 기존에 startCamera() 함수가 이미 있으니 그대로 호출
+  if (typeof startCamera === 'function') {
+    await startCamera();
+  }
+});
+
+
+
+
+
+
+  
 
 /* ===== 6번 화면(지도) : “지도 클릭 → screen-map 열기 + 금오름 포인트 표시” ===== */
 
