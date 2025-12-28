@@ -1652,6 +1652,12 @@ function initLeafletMap(){
     // ✅ 포인트 아이콘 + 금오름 이름(팝업)
     leafletMarker.bindPopup('<b>금오름</b><br/>한림읍 금악리').openPopup();
 
+// ✅ 마커(금오름 표시) 탭 → AR 화면으로 이동 + 카메라 시작
+leafletMarker.on('click', async () => {
+  showScreen('ar');
+  await startCamera();
+});
+
     mapInited = true;
   }
 
