@@ -909,6 +909,39 @@ button{
         </div>
       </section>
 
+<!-- =========================
+     6번 화면 : 지도(금오름 위치)
+========================= -->
+<section id="screen-map" class="screen home">
+  <div class="topbar">
+    <div class="title">지도</div>
+    <div class="top-icons">
+      <div class="iconbtn" aria-label="닫기">
+        <!-- 단순 아이콘(장식용) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z"/>
+          <path d="M9 4v14M15 6v14"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:14px;">
+    <div style="font-weight:700; margin-bottom:10px;">금오름 위치</div>
+
+    <!-- 지도 영역 -->
+    <div id="mapBox" style="height: calc(100vh - 190px); border-radius:16px; overflow:hidden; background:#eef2f7;"></div>
+
+    <div style="margin-top:10px; color:#6b7280; font-size:13px;">
+      한림읍 금악리 · 시연용 지도(확대/축소 가능)
+    </div>
+  </div>
+</section>
+
+
+
+      
+
 <!-- 화면 4 (AR 체험) -->
 <section id="screen-ar" class="screen">
   <div class="topbar">
