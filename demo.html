@@ -919,32 +919,9 @@ img[src$="present2.png"]{
   <div class="app">
     <div class="phone">
 
-      <!-- 화면 1 -->
-      <section id="screen-1" class="screen active">
-        <div class="hero">
-          <h1>오르樂별 NFC 체험</h1>
-          <p>가운데 원을 터치하면 “홈(오름인증)” 화면으로 넘어갑니다</p>
-
-          <div class="pulseWrap">
-            <div class="pulseRing"></div>
-            <div class="pulseRing"></div>
-            <div class="pulseRing"></div>
-            <div class="pulseCircle">TAP</div>
-          </div>
-        </div>
-
-        <button class="primaryBtn" id="goHomeBtn">체험 시작</button>
-
-        <div class="card cardPad" style="margin-top:14px;">
-          <div class="subtle">전시용 안내</div>
-          <div style="margin-top:6px; font-weight:900;">
-            NFC 또는 QR로 웹앱이 열리는 데모입니다.
-          </div>
-        </div>
-      </section>
-
+     
       <!-- 화면 2 (홈) -->
-      <section id="screen-home" class="screen">
+      <section id="screen-home" class="screen active">
         <div class="topbar">
           <div class="title">오르樂별 : 탐라 스타로드</div>
           <div class="top-icons">
@@ -1513,7 +1490,7 @@ img[src$="present2.png"]{
 <script>
   /* ====== 화면 전환 공통 ====== */
   const screens = {
-    s1: document.getElementById('screen-1'),
+    
     home: document.getElementById('screen-home'),
     more: document.getElementById('screen-more'),
     ar: document.getElementById('screen-ar'),
@@ -1528,11 +1505,7 @@ img[src$="present2.png"]{
     screens[name] && screens[name].classList.add('active');
   }
 
-  /* ====== 1번 → 2번 (체험 시작) ====== */
-  const goHomeBtn = document.getElementById('goHomeBtn');
-  if (goHomeBtn){
-    goHomeBtn.addEventListener('click', () => showScreen('home'));
-  }
+ 
 
 
 // ✅ 홈(2번) -> 포인트/쿠폰(7번)
