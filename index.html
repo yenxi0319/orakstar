@@ -1121,7 +1121,7 @@ button{
 ========================= -->
 <section id="screen-points" class="screen">
   <div class="topbar">
-    <div class="title">포인트</div>
+    <div class="title">포인트/쿠폰</div>
     <div class="top-icons">
       <button class="iconbtn tappable" id="btnPointsClose" title="닫기" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1139,7 +1139,7 @@ button{
           <div style="font-size:26px; font-weight:900; letter-spacing:-.3px; margin-top:4px;">
             <span id="coinBalance">500</span> 코인
           </div>
-          <div class="subtle" style="margin-top:6px;">전시용 데모: coin1 5개 적립 상태</div>
+          <div class="subtle" style="margin-top:6px;">전시용 데모: coin1 5개 적립</div>
         </div>
 
         <div class="coinPile" aria-label="coin1 5개 적립">
@@ -1174,63 +1174,57 @@ button{
 
   <div class="card cardPad">
     <div style="font-weight:900; letter-spacing:-.2px;">쿠폰 교환</div>
-    <div class="subtle" style="margin-top:6px;">원하는 혜택을 선택해 교환하는 화면(전시용)</div>
+    <div class="subtle" style="margin-top:6px;">코인을 사용해 쿠폰으로 교환할 수 있어요.</div>
 
-    <div class="couponGrid" style="margin-top:12px;">
-      <button class="couponItem tappable" type="button">
+
+     <div class="couponGrid" style="margin-top:12px;">
+      <!-- ✅ americano.png 로 사용 -->
+      <div class="couponItem">
         <div class="couponIcon">
-          <img src="coin2.png" alt="coin">
+          <img src="americano.png" alt="아메리카노">
         </div>
         <div class="couponTxt">
           <div class="couponTitle">아메리카노 1잔</div>
-          <div class="couponMeta">500 코인</div>
+          <div class="couponMeta">200 코인</div>
         </div>
-      </button>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
 
-      <button class="couponItem tappable" type="button">
+      <div class="couponItem">
         <div class="couponIcon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/>
-            <path d="M12 3v13"/>
-            <path d="M7 8l5-5 5 5"/>
-          </svg>
+          <img src="coin2.png" alt="기념품">
         </div>
         <div class="couponTxt">
-          <div class="couponTitle">기념품 10% 할인</div>
-          <div class="couponMeta">400 코인</div>
+          <div class="couponTitle">제주 굿즈 5% 할인</div>
+          <div class="couponMeta">150 코인</div>
         </div>
-      </button>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
 
-      <button class="couponItem tappable" type="button">
+      <div class="couponItem">
         <div class="couponIcon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M4 7h16"/>
-            <path d="M4 12h16"/>
-            <path d="M4 17h16"/>
-          </svg>
+          <img src="coin2.png" alt="관광">
         </div>
         <div class="couponTxt">
-          <div class="couponTitle">AR 굿즈 교환권</div>
-          <div class="couponMeta">700 코인</div>
+          <div class="couponTitle">체험권 1회</div>
+          <div class="couponMeta">300 코인</div>
         </div>
-      </button>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
 
-      <button class="couponItem tappable" type="button">
+      <div class="couponItem">
         <div class="couponIcon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M21 10a4 4 0 0 1-4 4H7l-4 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
-            <path d="M8 9h8"/>
-          </svg>
+          <img src="coin2.png" alt="포인트">
         </div>
         <div class="couponTxt">
-          <div class="couponTitle">지역특산물 1,000원권</div>
-          <div class="couponMeta">1,000 코인</div>
+          <div class="couponTitle">추가 100P 적립</div>
+          <div class="couponMeta">100 코인</div>
         </div>
-      </button>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
     </div>
   </div>
 </section>
-
 
       
 
