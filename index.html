@@ -1457,6 +1457,28 @@ img[src$="present2.png"]{
     </div>
   </div>
 
+<!-- =========================
+     (추가) 쿠폰 교환 바텀시트 모달
+========================= -->
+<div id="exchangeSheet" class="sheet" aria-hidden="true">
+  <div class="sheetDim" data-sheet-close></div>
+
+  <div class="sheetPanel" role="dialog" aria-modal="true" aria-label="쿠폰 교환">
+    <div class="sheetHandle" aria-hidden="true"></div>
+
+    <div class="sheetHead">
+      <div class="sheetTitle">쿠폰 교환</div>
+      <button class="iconbtn tappable" type="button" data-sheet-close title="닫기" style="width:34px;height:34px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+
+
+
+  
 <script>
   /* ====== 화면 전환 공통 ====== */
   const screens = {
@@ -1854,23 +1876,7 @@ const btnStampsClose = document.getElementById('btnStampsClose');
 btnStampsClose?.addEventListener('click', () => showScreen('home'));
 
 
-<!-- =========================
-     (추가) 쿠폰 교환 바텀시트 모달
-========================= -->
-<div id="exchangeSheet" class="sheet" aria-hidden="true">
-  <div class="sheetDim" data-sheet-close></div>
 
-  <div class="sheetPanel" role="dialog" aria-modal="true" aria-label="쿠폰 교환">
-    <div class="sheetHandle" aria-hidden="true"></div>
-
-    <div class="sheetHead">
-      <div class="sheetTitle">쿠폰 교환</div>
-      <button class="iconbtn tappable" type="button" data-sheet-close title="닫기" style="width:34px;height:34px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
 
     <div class="sheetBody">
       <div class="subtle">선택한 쿠폰</div>
