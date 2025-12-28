@@ -1,16 +1,21 @@
 <!doctype html>
 <html lang="ko">
 <head>
+
 <!-- ✅ Leaflet(지도) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
   
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>오르樂별 웹앱 데모</title>
+
   <!-- 예쁜 한글 폰트(가벼운 앱 느낌) -->
   <link rel="stylesheet" as="style" crossorigin
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+
   <style>
     :root{
       --bg:#f6f7fb;
@@ -21,6 +26,7 @@
       --shadow: 0 10px 30px rgba(0,0,0,.08);
       --radius: 18px;
     }
+
 /* 참여중인 오름: 3열 그리드 + 금오름 강조 */
 .oreum-grid{
   margin-top: 8px;
@@ -29,18 +35,27 @@
   gap: 8px 12px; /* 세로, 가로 간격 */
   font-weight: 900;
   line-height: 1.25;
-}.oreum-grid span{
+}
+
+.oreum-grid span{
   display: block;
   color: var(--ink); /* 기본 검정 */
   white-space: nowrap; /* 줄바꿈 방지 */
-}.oreum-grid span.active{
+}
+
+.oreum-grid span.active{
   color: #e11d48; /* 진분홍(로즈 계열) */
-}.tappable,
+}
+
+.tappable,
 .navItem,
 button{
   cursor: pointer;
-}    
+}
+    
 .tab { cursor: pointer; }
+
+
     
     *{box-sizing:border-box}
     body{
@@ -49,6 +64,7 @@ button{
       color:var(--ink);
       background: var(--bg);
     }
+
     /* 앱 프레임 (전시용 폰 화면 느낌) */
     .app{
       max-width: 420px;
@@ -63,6 +79,7 @@ button{
       overflow: hidden;
       min-height: 780px;
     }
+
     /* 화면 전환 */
     .screen{
       display:none;
@@ -70,6 +87,7 @@ button{
       min-height: 780px;
     }
     .screen.active{display:block;}
+
     /* 상단바 */
     .topbar{
       display:flex;
@@ -105,6 +123,7 @@ button{
       height: 20px;
       overflow: visible; /* 아이콘 잘림 방지 */
     }
+
     /* 카드 */
     .card{
       margin: 0 16px 12px;
@@ -114,6 +133,7 @@ button{
       box-shadow: 0 6px 18px rgba(0,0,0,.05);
     }
     .cardPad{ padding: 14px; }
+
     .row{
       display:flex;
       align-items:center;
@@ -122,6 +142,7 @@ button{
     }
     .subtle{ color: var(--muted); font-size: 13px; }
     .meta{ color: var(--muted); font-size: 14px; line-height: 1.35; }
+
     /* 화면1: 원형 펄스 */
     .hero{
       padding: 28px 16px 10px;
@@ -168,11 +189,13 @@ button{
     .pulseRing:nth-child(1){ transform: scale(.85); opacity:.55; }
     .pulseRing:nth-child(2){ transform: scale(1.05); opacity:.35; animation-delay:.25s; }
     .pulseRing:nth-child(3){ transform: scale(1.25); opacity:.2; animation-delay:.45s; }
+
     @keyframes pulse{
       0%{ transform: scale(.9); opacity:.55; }
       50%{ transform: scale(1.05); opacity:.25; }
       100%{ transform: scale(.9); opacity:.55; }
     }
+
     .primaryBtn{
       width: calc(100% - 32px);
       margin: 8px 16px 0;
@@ -185,6 +208,7 @@ button{
       letter-spacing: -0.2px;
       cursor:pointer;
     }
+
     /* 화면2: 홈(요청 반영) */
     .chip{
       display:inline-flex;
@@ -206,7 +230,8 @@ button{
   text-align:center;          /* ✅ 글씨 가운데 */
   gap: 10px;
   padding: 16px 14px 14px;
-}/* ===== 오름인증: 5개 도장 카드 스와이프 ===== */
+}
+/* ===== 오름인증: 5개 도장 카드 스와이프 ===== */
 .stampCarousel{
   display:flex;
   overflow-x:auto;
@@ -214,7 +239,9 @@ button{
   -webkit-overflow-scrolling: touch;
   gap: 12px;
   padding: 14px;
-}.stampCarousel::-webkit-scrollbar{ display:none; }
+}
+.stampCarousel::-webkit-scrollbar{ display:none; }
+
 .stampCard{
   min-width: 82%;
   scroll-snap-align: center;
@@ -224,7 +251,9 @@ button{
   box-shadow: 0 8px 20px rgba(0,0,0,.06);
   padding: 18px 14px 16px;
   text-align:center;
-}.stampImg{
+}
+
+.stampImg{
   width: 108px;
   height: 108px;
   border-radius: 999px;   /* 원형 유지 */
@@ -232,34 +261,44 @@ button{
   display:block;
   margin: 2px auto 10px;
   /* ✅ 테두리/둥근사각 프레임 만들지 않음 */
-}.stampKicker{
+}
+
+.stampKicker{
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
   margin-bottom: 6px;
-}.stampPlace{
+}
+.stampPlace{
   font-size: 20px;
   font-weight: 900;
   letter-spacing:-0.3px;
   margin-bottom: 4px;
-}.stampMeta{
+}
+.stampMeta{
   color: var(--muted);
   font-size: 13px;
   line-height: 1.35;
-}/* 페이지 점(인디케이터) */
+}
+
+/* 페이지 점(인디케이터) */
 .stampDots{
   display:flex;
   justify-content:center;
   gap: 6px;
   padding: 0 0 12px;
-}.stampDot{
+}
+.stampDot{
   width: 6px;
   height: 6px;
   border-radius: 999px;
   background: #d1d5db;
-}.stampDot.active{
+}
+.stampDot.active{
   background:#111827;
-}    
+}
+
+    
    .midIcon{
   width: 120px;               /* ✅ 더 크게 */
   height: 120px;
@@ -271,12 +310,15 @@ button{
   place-items:center;
   overflow: visible;          /* ✅ 이미지 잘림 방지 */
   flex: 0 0 auto;
-}    .midIcon img{
+}
+    .midIcon img{
   width: 100%;
   height: 100%;
   object-fit: contain;        /* ✅ 잘리지 않게 */
   display:block;
-}    .midText .kicker{
+}
+
+    .midText .kicker{
       color: var(--muted);
       font-size: 12px;
       font-weight: 700;
@@ -293,7 +335,8 @@ button{
   display:flex;
   flex-direction: column;
   align-items: center;
-}    
+}
+    
     .actions{
       display:flex;
       gap: 10px;
@@ -314,6 +357,7 @@ button{
       cursor:pointer;
     }
     .actionBtn svg{ width:18px; height:18px; }
+
     /* 하단 내비게이션 */
     .bottomnav{
       position: absolute;
@@ -326,12 +370,15 @@ button{
       justify-content:space-around;
       padding: 8px 8px 10px;
     }
+
 /* ===== 화면5(오름적립) : 도장 5개 그리드 ===== */
 .stampGrid{
   display:grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px 12px;
-}.stampTile{
+}
+
+.stampTile{
   margin:0;
   background:#fff;
   border:1px solid var(--line);
@@ -339,7 +386,9 @@ button{
   padding: 14px 12px 12px;
   text-align:center;
   box-shadow: 0 8px 18px rgba(0,0,0,.05);
-}.stampTile img{
+}
+
+.stampTile img{
   width: 92px;
   height: 92px;
   object-fit: cover;
@@ -347,11 +396,19 @@ button{
   display:block;
   margin: 0 auto 10px;
   border: none;            /* 테두리 일부러 만들지 않음 */
-}.stampTile figcaption{
+}
+
+.stampTile figcaption{
   font-weight: 900;
   letter-spacing:-0.2px;
   font-size: 14px;
-}    
+}
+
+
+
+
+
+    
     .navItem{
       width: 20%;
       display:flex;
@@ -365,13 +422,93 @@ button{
       user-select:none;
     }
     .navItem svg{ width: 22px; height: 22px; }
-    .navItem.active{ color:#111827; }
+    .navItem.active{ color: var(--muted); } /* active도 회색 유지 */
     .navItem.tappable{ cursor:pointer; } /* 손모양 */
+
+    /* 오름적립 아이콘만 시각적으로 작아 보여서 살짝 키움 */
+#navStamps svg{
+  width: 26px;
+  height: 26px;
+}
+
+
+/* ===== 화면7(포인트/코인) ===== */
+.coinPile{
+  width: 110px;
+  height: 90px;
+  position: relative;
+  margin-top: 4px;
+}
+.coinPile img{
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) translateY(calc(var(--i) * -6px)) rotate(calc(var(--i) * 6deg));
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,.12));
+}
+
+.couponGrid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.couponItem{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  text-align:left;
+}
+.couponIcon{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  background:#fff;
+  flex: 0 0 auto;
+}
+.couponIcon img{ width:20px; height:20px; object-fit:contain; }
+.couponIcon svg{ width:22px; height:22px; }
+.couponTitle{ font-weight: 900; letter-spacing:-.2px; font-size: 13.5px; }
+.couponMeta{ color: var(--muted); font-weight: 800; font-size: 12px; margin-top: 4px; }
+
+/* ===== 쿠폰 교환 버튼을 아래로 내리기 (레이아웃 정렬 개선) ===== */
+.couponItem{
+  flex-direction: column;        /* 가로 → 세로 */
+  align-items: stretch;          /* 내부 요소 폭 맞춤 */
+}
+
+.couponIcon{
+  margin-bottom: 4px;
+}
+
+.couponTxt{
+  width: 100%;
+}
+
+.couponBtn{
+  margin-top: 10px;
+  width: 100%;                   /* 버튼 가로 꽉 차게 */
+  text-align: center;
+}
+
+
+    
+
+    
     /* 더보기(점3개) - 오른쪽 하단 강조 */
     .navMoreIcon{
       width: 22px; height:22px;
       display:grid; place-items:center;
     }
+
     /* 화면3: 더보기 */
     .profileCard{
       display:flex;
@@ -404,6 +541,7 @@ button{
       font-weight: 900;
       letter-spacing: 0.5px;
     }
+
     .menuGrid{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
@@ -425,8 +563,10 @@ button{
       font-weight: 900;
       letter-spacing:-0.2px;
     }
+
 /* ===== (추가) 공통 버튼/커서 개선 ===== */
 .tappable { cursor: pointer; }
+
 /* ===== (추가) 모달(스탬프 코인 쌓기) ===== */
 .modal{
   position: fixed;
@@ -435,11 +575,13 @@ button{
   align-items: center;
   justify-content: center;
   z-index: 9999;
-}.modal.show{ display:flex; }
+}
+.modal.show{ display:flex; }
 .modalDim{
   position:absolute; inset:0;
   background: rgba(0,0,0,.35);
-}.modalCard{
+}
+.modalCard{
   position: relative;
   width: min(360px, calc(100% - 40px));
   background:#fff;
@@ -447,31 +589,36 @@ button{
   border-radius: 18px;
   box-shadow: var(--shadow);
   padding: 16px;
-}.modalTitle{ font-weight: 900; font-size: 16px; letter-spacing:-.2px; }
+}
+.modalTitle{ font-weight: 900; font-size: 16px; letter-spacing:-.2px; }
 .modalSub{ margin-top:6px; color:var(--muted); font-size: 12.5px; }
 .modalActions{
   margin-top: 14px;
   display:flex;
   gap:10px;
   justify-content:flex-end;
-}.ghostBtn, .primaryMini{
+}
+.ghostBtn, .primaryMini{
   border-radius: 12px;
   padding: 10px 12px;
   font-weight: 900;
   border:1px solid var(--line);
   background:#fff;
-}.primaryMini{
+}
+.primaryMini{
   background:#111827;
   color:#fff;
   border-color:#111827;
-}.coinStack{
+}
+.coinStack{
   margin-top: 14px;
   height: 110px;
   position: relative;
   display:flex;
   align-items:flex-end;
   justify-content:center;
-}.coinStack img{
+}
+.coinStack img{
   width: 56px;
   height: 56px;
   position: absolute;
@@ -480,9 +627,71 @@ button{
   transform: translateY(30px) scale(.9);
   opacity: 0;
   animation: coinDrop .45s ease forwards;
-}@keyframes coinDrop{
+}
+@keyframes coinDrop{
   to { transform: translateY(0) scale(1); opacity: 1; }
-}/* ===== (추가) AR 화면 ===== */
+}
+
+
+/* ===== (추가) 쿠폰 교환 바텀시트 ===== */
+.sheet{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+.sheet.show{ display:block; }
+
+.sheetDim{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.sheet.show .sheetDim{ opacity: 1; }
+
+.sheetPanel{
+  position:absolute;
+  left: 0; right: 0; bottom: 0;
+  background:#fff;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border: 1px solid var(--line);
+  box-shadow: 0 -18px 40px rgba(0,0,0,.18);
+  transform: translateY(110%);
+  transition: transform .22s ease;
+  padding: 10px 14px 14px;
+}
+.sheet.show .sheetPanel{ transform: translateY(0); }
+
+.sheetHandle{
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  background:#e5e7eb;
+  margin: 6px auto 10px;
+}
+
+.sheetHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 4px 2px 8px;
+}
+.sheetTitle{
+  font-weight: 900;
+  letter-spacing:-.2px;
+}
+.sheetBody{ padding: 6px 2px 4px; }
+
+
+
+
+
+
+    
+/* ===== (추가) AR 화면 ===== */
 .arStage{
   position: relative;
   height: 700px;
@@ -491,12 +700,14 @@ button{
   overflow: hidden;
   background:#000;
   border:1px solid var(--line);
-}#arVideo{
+}
+#arVideo{
   width:100%;
   height:100%;
   object-fit: cover;
   display:block;
-}.arHud{
+}
+.arHud{
   position:absolute;
   left: 12px;
   right: 12px;
@@ -505,7 +716,8 @@ button{
   justify-content:space-between;
   gap: 10px;
   z-index: 5;
-}.arChip{
+}
+.arChip{
   flex: 1;
   display:flex;
   align-items:center;
@@ -516,12 +728,14 @@ button{
   padding: 10px 12px;
   font-weight: 800;
   font-size: 12.5px;
-}.arChip .dot{
+}
+.arChip .dot{
   width: 8px;
   height: 8px;
   border-radius: 999px;
   background: #22c55e;
-}.pointChip{
+}
+.pointChip{
   display:flex;
   align-items:center;
   gap: 8px;
@@ -531,7 +745,19 @@ button{
   padding: 10px 12px;
   font-weight: 900;
   font-size: 12.5px;
-}.pointChip img{ width:16px; height:16px; object-fit:contain; }
+}
+.pointChip img{ width:16px; height:16px; object-fit:contain; }
+
+/* (추가) 쿠폰 교환 아이콘(present2.png)만 살짝 크게 */
+img[src$="present2.png"]{
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+
+    
+
 /* 요정/구름 버튼 (AR 오브젝트) */
 .fairy, .cloud{
   position:absolute;
@@ -539,16 +765,19 @@ button{
   border: none;
   background: transparent;
   padding: 0;
-}.fairy{
+}
+.fairy{
   width: 86px;
   height: 86px;
-}.fairy img{
+}
+.fairy img{
   width: 100%;
   height: 100%;
   object-fit: contain;
   display:block;
   filter: drop-shadow(0 10px 14px rgba(0,0,0,.35));
-}.cloud{
+}
+.cloud{
   width: 64px;
   height: 64px;
   display: none;
@@ -558,7 +787,9 @@ button{
   border:1px solid rgba(229,231,235,.9);
   box-shadow: 0 10px 20px rgba(0,0,0,.15);
   font-size: 26px;
-}/* 팝업(별자리/신화/포인트) 카드 UI */
+}
+
+/* 팝업(별자리/신화/포인트) 카드 UI */
 .popup{
   position:absolute;
   inset: 0;
@@ -567,7 +798,8 @@ button{
   justify-content: center;
   z-index: 20;
   background: rgba(0,0,0,.35);
-}.popup.show{ display:flex; }
+}
+.popup.show{ display:flex; }
 .popupCard{
   width: min(360px, calc(100% - 40px));
   background: rgba(255,255,255,.98);
@@ -575,36 +807,137 @@ button{
   border-radius: 18px;
   box-shadow: var(--shadow);
   padding: 16px;
-}.popupTitle{
+}
+.popupTitle{
   font-size: 16px;
   font-weight: 900;
   letter-spacing:-.2px;
-}.popupBody{
+}
+.popupBody{
   margin-top: 10px;
   color:#111827;
   font-size: 13.5px;
   line-height: 1.5;
   white-space: pre-line;
-}.popupActions{
+}
+.popupActions{
   margin-top: 14px;
   display:flex;
   gap: 10px;
   justify-content:flex-end;
-}/* 3번 화면 topbar 글씨/아이콘 잘림 보정 */
+}
+
+/* 3번 화면 topbar 글씨/아이콘 잘림 보정 */
 #screen-more .title{ font-size: 16px; font-weight: 900; }
 #screen-more .iconbtn svg{ width:20px; height:20px; }
+
+
+/* ===== 7번 화면 쿠폰 그리드 UI 개선(이미지 크게 + 중앙정렬 + 아이콘 테두리 제거) ===== */
+#screen-points .couponGrid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#screen-points .couponItem{
+  display: flex;
+  flex-direction: column;      /* 아이콘/텍스트/버튼을 세로로 */
+  align-items: center;         /* 전체 가운데 */
+  text-align: center;          /* 글씨 가운데 */
+  gap: 8px;
+  padding: 14px 12px 12px;
+
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.05);
+}
+
+/* ✅ “쿠폰 이미지” 자체를 크게 + 테두리/프레임 느낌 제거 */
+#screen-points .couponIcon{
+  width: 88px;                 /* 여기 숫자 올리면 더 커짐 (예: 96px) */
+  height: 88px;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#screen-points .couponIcon img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 텍스트도 중앙 정렬로 안정감 있게 */
+#screen-points .couponTxt{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#screen-points .couponTitle{
+  font-weight: 900;
+  letter-spacing: -0.2px;
+}
+
+#screen-points .couponMeta{
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+/* 교환 버튼은 아래쪽에 깔끔하게 */
+#screen-points .couponBtn{
+  margin-top: 8px;
+  width: 100%;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-weight: 900;
+}
+
+/* ===== 특정 쿠폰 아이콘 크기 미세 조정 ===== */
+
+/* 아메리카노 아이콘이 가장 커서 살짝 줄이기 */
+#screen-points img[src$="americano.png"]{
+  transform: scale(0.74);
+}
+
+/* present1 아이콘도 조금 줄이기 */
+#screen-points img[src$="present1.png"]{
+  transform: scale(0.74);
+}
+
+    
+
+
     
   </style>
+
   
 </head>
+
 <body>
   <div class="app">
     <div class="phone">
+
       <!-- 화면 1 -->
       <section id="screen-1" class="screen active">
         <div class="hero">
           <h1>오르樂별 NFC 체험</h1>
           <p>가운데 원을 터치하면 “홈(오름인증)” 화면으로 넘어갑니다</p>
+
           <div class="pulseWrap">
             <div class="pulseRing"></div>
             <div class="pulseRing"></div>
@@ -612,7 +945,9 @@ button{
             <div class="pulseCircle">TAP</div>
           </div>
         </div>
+
         <button class="primaryBtn" id="goHomeBtn">체험 시작</button>
+
         <div class="card cardPad" style="margin-top:14px;">
           <div class="subtle">전시용 안내</div>
           <div style="margin-top:6px; font-weight:900;">
@@ -620,6 +955,7 @@ button{
           </div>
         </div>
       </section>
+
       <!-- 화면 2 (홈) -->
       <section id="screen-home" class="screen">
         <div class="topbar">
@@ -639,6 +975,7 @@ button{
             </div>
           </div>
         </div>
+
         <div class="card">
           <div class="cardPad row">
             <div class="chip"><small>적립중인</small> 오름인증</div>
@@ -652,12 +989,14 @@ button{
     <div class="stampPlace">금오름</div>
     <div class="stampMeta">NFC 도장 터치 시<br/>스탬프 1개 적립</div>
   </article>
+
   <article class="stampCard" data-name="새별오름">
     <img class="stampImg" src="saebyeoloreum.png" alt="saebyeoloreum" />
     <div class="stampKicker">오름인증</div>
     <div class="stampPlace">새별오름</div>
     <div class="stampMeta">NFC 도장 터치 시<br/>스탬프 1개 적립</div>
   </article>
+
 <article class="stampCard" data-name="다랑쉬오름">
     <img class="stampImg" src="darangshioreum.png" alt="darangshioreum" />
     <div class="stampKicker">오름인증</div>
@@ -671,15 +1010,19 @@ button{
     <div class="stampPlace">아부오름</div>
     <div class="stampMeta">NFC 도장 터치 시<br/>스탬프 1개 적립</div>
   </article>
+
     <article class="stampCard" data-name="백약이오름">
     <img class="stampImg" src="baegyakioreum.png" alt="baegyakioreum" />
     <div class="stampKicker">오름인증</div>
     <div class="stampPlace">백약이오름</div>
     <div class="stampMeta">NFC 도장 터치 시<br/>스탬프 1개 적립</div>
   </article>
+
     
+
   
 </div>
+
 <!-- 점(인디케이터) -->
 <div class="stampDots" id="stampDots">
   <span class="stampDot active"></span>
@@ -688,14 +1031,20 @@ button{
   <span class="stampDot"></span>
   <span class="stampDot"></span>
 </div>
+
          
+
           <div class="actions">
-            <button class="actionBtn" type="button">
+            <button class="actionBtn" type="button" id="btnPointOpen">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v14M5 12h14"/>
-              </svg>
-              포인트
-            </button>
+                    </svg>
+                     포인트/쿠폰
+                   </button>
+
+
+
+            
             
            <button class="actionBtn" type="button" id="btnGuide">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -703,10 +1052,13 @@ button{
   </svg>
   안내
 </button>
+
           </div>
         </div>
+
 <div class="card cardPad">
   <div class="subtle">참여중인 오름</div>
+
   <div class="oreum-grid" aria-label="참여중인 오름 목록">
     <span class="active">금오름</span>
     <span>새별오름</span>
@@ -715,8 +1067,11 @@ button{
     <span>백약이오름</span>
   </div>
 </div>
+
+
         
       </section>
+
       <!-- 화면 3 (더보기) -->
       <section id="screen-more" class="screen">
         <div class="topbar">
@@ -731,6 +1086,7 @@ button{
             </div>
           </div>
         </div>
+
         <div class="card">
           <div class="profileCard">
             <div class="bronzeBadge">B</div>
@@ -740,6 +1096,7 @@ button{
             </div>
           </div>
         </div>
+
         <div class="card">
           <div class="menuGrid">
             <div class="menuItem">
@@ -793,6 +1150,7 @@ button{
           </div>
         </div>
       </section>
+
 <!-- =========================
      6번 화면 : 지도(금오름 위치)
 ========================= -->
@@ -809,16 +1167,23 @@ button{
       </div>
     </div>
   </div>
+
   <div style="padding:14px;">
     <div style="font-weight:700; margin-bottom:10px;">금오름 위치</div>
+
     <!-- 지도 영역 -->
     <div id="mapBox" style="height: calc(100vh - 190px); border-radius:16px; overflow:hidden; background:#eef2f7;"></div>
+
     <div style="margin-top:10px; color:#6b7280; font-size:13px;">
       한림읍 금악리 · 시연용 지도(확대/축소 가능)
     </div>
   </div>
 </section>
+
+
+
       
+
 <!-- 화면 4 (AR 체험) -->
 <section id="screen-ar" class="screen">
   <div class="topbar">
@@ -831,34 +1196,46 @@ button{
       </button>
     </div>
   </div>
+
   <div class="arStage">
     <!-- 카메라 -->
     <video id="arVideo" autoplay playsinline muted></video>
+
     <!-- 오버레이 UI -->
     <div class="arHud">
       <div class="arChip">
         <span class="dot"></span>
         카메라 ON · 동백요정을 눌러보세요
       </div>
+
      <div class="pointChip">
   <img src="coin2.png" alt="coin">
   포인트 <b id="pointValue">0</b>P
 </div>
+
     </div>
+
     <!-- 요정(클릭 대상) -->
 <button id="fairy" class="fairy tappable" type="button" aria-label="CamelliaFairy1">
   <img src="CamelliaFairy1.png" alt="CamelliaFairy1">
 </button>
+
+
+
+
     
+
     <!-- 구름(시간 지연 후 등장) -->
     <button id="cloud" class="cloud tappable" type="button" aria-label="구름 아이콘">
         ☁
     </button>
+
     <!-- 팝업(공통) -->
     <div id="popup" class="popup" aria-hidden="true">
       <div class="popupCard">
         <div class="popupTitle" id="popupTitle">제목</div>
         <div class="popupBody" id="popupBody">내용</div>
+
         <div class="popupActions">
           <button class="ghostBtn tappable" id="popupClose" type="button">닫기</button>
           <button class="primaryMini tappable" id="popupNext" type="button">다 읽었어요</button>
@@ -867,6 +1244,7 @@ button{
     </div>
   </div>
 </section>
+
 <!-- 화면 5 (오름적립: 5개 도장) -->
 <section id="screen-stamps" class="screen">
   <div class="topbar">
@@ -879,28 +1257,34 @@ button{
       </button>
     </div>
   </div>
+
   <div class="card cardPad">
     <div style="font-weight:900; letter-spacing:-.2px;">내 오름 도장</div>
     <div class="subtle" style="margin-top:6px;">획득한 도장 5개를 한눈에 보여주는 전시용 화면입니다.</div>
   </div>
+
   <div class="card cardPad">
     <div class="stampGrid" aria-label="오름 도장 5개">
       <figure class="stampTile">
         <img src="geumoreum.png" alt="금오름 도장" />
         <figcaption>금오름</figcaption>
       </figure>
+
       <figure class="stampTile">
         <img src="saebyeoloreum.png" alt="새별오름 도장" />
         <figcaption>새별오름</figcaption>
       </figure>
+
       <figure class="stampTile">
         <img src="abuoreum.png" alt="아부오름 도장" />
         <figcaption>아부오름</figcaption>
       </figure>
+
       <figure class="stampTile">
         <img src="darangshioreum.png" alt="다랑쉬오름 도장" />
         <figcaption>다랑쉬오름</figcaption>
       </figure>
+
       <figure class="stampTile">
         <img src="baegyakioreum.png" alt="백약이오름 도장" />
         <figcaption>백약이오름</figcaption>
@@ -908,8 +1292,120 @@ button{
     </div>
   </div>
 </section>
+
   
+<!-- =========================
+     7번 화면 : 포인트/코인
+========================= -->
+<section id="screen-points" class="screen">
+  <div class="topbar">
+    <div class="title">포인트/쿠폰</div>
+    <div class="top-icons">
+      <button class="iconbtn tappable" id="btnPointsClose" title="닫기" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="cardPad">
+      <div class="row" style="align-items:flex-start;">
+        <div>
+          <div class="subtle">지금까지 모은 코인</div>
+          <div style="font-size:26px; font-weight:900; letter-spacing:-.3px; margin-top:4px;">
+            <span id="coinBalance">500</span> 코인
+          </div>
+          <div class="subtle" style="margin-top:6px;">전시용 데모: coin1 5개 적립</div>
+        </div>
+
+        <div class="coinPile" aria-label="coin1 5개 적립">
+          <img src="coin1.png" alt="coin1" style="--i:0;">
+          <img src="coin1.png" alt="coin1" style="--i:1;">
+          <img src="coin1.png" alt="coin1" style="--i:2;">
+          <img src="coin1.png" alt="coin1" style="--i:3;">
+          <img src="coin1.png" alt="coin1" style="--i:4;">
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="actionBtn" type="button" id="btnEarnGuide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 6v12"/>
+          <path d="M6 12h12"/>
+        </svg>
+        적립방법
+      </button>
+
+      <button class="actionBtn" type="button" id="btnHistory">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7"/>
+          <path d="M3 3v6h6"/>
+          <path d="M12 7v6l4 2"/>
+        </svg>
+        이용내역
+      </button>
+    </div>
+  </div>
+
+  <div class="card cardPad">
+    <div style="font-weight:900; letter-spacing:-.2px;">쿠폰 교환</div>
+    <div class="subtle" style="margin-top:6px;">코인을 사용해 쿠폰으로 교환할 수 있어요.</div>
+
+
+     <div class="couponGrid" style="margin-top:12px;">
+      <!-- ✅ americano.png 로 사용 -->
+      <div class="couponItem">
+        <div class="couponIcon">
+          <img src="americano.png" alt="아메리카노">
+        </div>
+        <div class="couponTxt">
+          <div class="couponTitle">아메리카노 1잔</div>
+          <div class="couponMeta">200 코인</div>
+        </div>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
+
+      <div class="couponItem">
+        <div class="couponIcon">
+          <img src="present.png" alt="기념품">
+        </div>
+        <div class="couponTxt">
+          <div class="couponTitle">제주 굿즈 5% 할인</div>
+          <div class="couponMeta">150 코인</div>
+        </div>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
+
+      <div class="couponItem">
+        <div class="couponIcon">
+          <img src="voucher.png" alt="관광">
+        </div>
+        <div class="couponTxt">
+          <div class="couponTitle">체험권 1회</div>
+          <div class="couponMeta">300 코인</div>
+        </div>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
+
+      <div class="couponItem">
+        <div class="couponIcon">
+          <img src="present2.png" alt="포인트">
+        </div>
+        <div class="couponTxt">
+          <div class="couponTitle">제주 굿즈 20% 할인</div>
+          <div class="couponMeta">500 코인</div>
+        </div>
+        <button class="couponBtn" type="button">교환</button>
+      </div>
+    </div>
+  </div>
+</section>
+
       
+
       <!-- 하단 내비게이션(모든 화면 공통으로 고정) -->
       <nav class="bottomnav" aria-label="Bottom Navigation">
         <div class="navItem tappable" id="navHome">
@@ -919,6 +1415,7 @@ button{
           </svg>
           <div>홈</div>
         </div>
+
         <div class="navItem tappable" id="navStamps">
           <!-- 회색 테두리 산모양 + 오름적립 -->
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -928,17 +1425,23 @@ button{
           </svg>
           <div>오름적립</div>
         </div>
-<div class="navItem" id="tabMap" data-screen="map">
+
+<div class="navItem tappable" id="tabMap" data-screen="map">
   <!-- 지도 아이콘 -->
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
     <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z"/>
     <path d="M9 4v14M15 6v14"/>
   </svg>
-  지도
+  <div>지도</div>
 </div>
+
+
+
+
+
         
         <!-- ✅ 오른쪽 하단 “점3개 + 더보기” : 클릭/손모양/화면전환 핵심 -->
-        <div class="navItem tappable active" id="navMore">
+        <div class="navItem tappable" id="navMore">
           <div class="navMoreIcon" aria-hidden="true">
             <!-- 점3개 아이콘 -->
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -950,8 +1453,10 @@ button{
           <div>더보기</div>
         </div>
       </nav>
+
     </div>
   </div>
+
 <script>
   /* ====== 화면 전환 공통 ====== */
   const screens = {
@@ -961,36 +1466,63 @@ button{
     ar: document.getElementById('screen-ar'),
     stamps: document.getElementById('screen-stamps'),
     map: document.getElementById('screen-map'), // map 이 줄 추가
+    points: document.getElementById('screen-points'), // points 줄 추가
   };
+
   function showScreen(name){
     Object.values(screens).forEach(el => el && el.classList.remove('active'));
     screens[name] && screens[name].classList.add('active');
   }
+
   /* ====== 1번 → 2번 (체험 시작) ====== */
   const goHomeBtn = document.getElementById('goHomeBtn');
   if (goHomeBtn){
     goHomeBtn.addEventListener('click', () => showScreen('home'));
   }
+
+
+// ✅ 홈(2번) -> 포인트/쿠폰(7번)
+const btnPointOpen = document.getElementById('btnPointOpen');
+if (btnPointOpen){
+  btnPointOpen.addEventListener('click', () => showScreen('points'));
+}
+
+// ✅ 포인트/쿠폰(7번) 닫기 -> 홈(2번)
+const btnPointsClose = document.getElementById('btnPointsClose');
+if (btnPointsClose){
+  btnPointsClose.addEventListener('click', () => showScreen('home'));
+}
+
+
+  
   /* ====== 2번(홈) 안내 버튼 → 4번(AR) ====== */
   const btnGuide = document.getElementById('btnGuide');
+
+  
+  
   /* 카메라 요소 */
   const arVideo = document.getElementById('arVideo');
   const btnArClose = document.getElementById('btnArClose');
+
   /* 오버레이 인터랙션 */
   const fairy = document.getElementById('fairy');
   const cloud = document.getElementById('cloud');
+
   /* 팝업 */
   const popup = document.getElementById('popup');
   const popupTitle = document.getElementById('popupTitle');
   const popupBody = document.getElementById('popupBody');
   const popupClose = document.getElementById('popupClose');
   const popupNext = document.getElementById('popupNext');
+
   /* 포인트 */
   const pointValueEl = document.getElementById('pointValue');
   let points = 0;
+
   /* 카메라 스트림 */
   let mediaStream = null;
   let cloudTimer = null;
+
   function openPopup(title, body, showNext=true){
     popupTitle.textContent = title;
     popupBody.textContent = body;
@@ -1002,6 +1534,7 @@ button{
     popup.classList.remove('show');
     popup.setAttribute('aria-hidden','true');
   }
+
   async function startCamera(){
     try{
       // iOS/모바일에서 백카메라 우선 (가능하면)
@@ -1010,12 +1543,14 @@ button{
         audio: false
       });
       arVideo.srcObject = mediaStream;
+
       // 3초 후 구름 등장(신화 트리거)
       cloud.style.display = 'none';
       if (cloudTimer) clearTimeout(cloudTimer);
       cloudTimer = setTimeout(() => {
         cloud.style.display = 'grid';
       }, 3000);
+
     }catch(err){
       openPopup(
         '카메라 권한이 필요해요',
@@ -1024,27 +1559,32 @@ button{
       );
     }
   }
+
   function stopCamera(){
     if (cloudTimer) clearTimeout(cloudTimer);
     cloud.style.display = 'none';
+
     if (mediaStream){
       mediaStream.getTracks().forEach(t => t.stop());
       mediaStream = null;
     }
     if (arVideo) arVideo.srcObject = null;
   }
+
   if (btnGuide){
     btnGuide.addEventListener('click', async () => {
       showScreen('ar');
       await startCamera();
     });
   }
+
   if (btnArClose){
     btnArClose.addEventListener('click', () => {
       stopCamera();
       showScreen('home');
     });
   }
+
   /* ====== 요정 클릭 → 황소자리 팝업 ====== */
   let fairyRead = false;
   fairy?.addEventListener('click', () => {
@@ -1054,6 +1594,7 @@ button{
     );
     fairyRead = true;
   });
+
   /* ====== 구름 클릭 → 신화 이야기 팝업 ====== */
   let storyRead = false;
   cloud?.addEventListener('click', () => {
@@ -1063,16 +1604,22 @@ button{
     );
     storyRead = true;
   });
+
   /* ====== 팝업 닫기/다 읽었어요 ====== */
   popupClose?.addEventListener('click', closePopup);
+
   popupNext?.addEventListener('click', () => {
     closePopup();
+
     // “별자리(요정) + 신화(구름)” 둘 다 읽은 뒤 포인트 적립
     if (fairyRead && storyRead){
      addPoints(100);
+
+
       // 한 번 적립되면 반복 적립 방지(원하면 제거 가능)
       fairyRead = false;
       storyRead = false;
+
       openPopup(
         '포인트 적립 완료!',
         '신화 이야기를 모두 확인하여 100P가 적립되었습니다.',
@@ -1080,27 +1627,35 @@ button{
       );
     }
   });
+
   /* ====== 손모양 커서: JS가 아니라 CSS에서 처리(이미 추가함) ====== */
+
 /* ===== (추가) 홈 상단 포인트/스탬프 동기화 ===== */
 const homePointEl = document.getElementById('homePoint');
 const stampCountEl = document.getElementById('stampCount');
 let stampCount = 0;
+
 function syncHome(){
   if (homePointEl) homePointEl.textContent = String(points);
   if (stampCountEl) stampCountEl.textContent = String(stampCount);
-}/* 최초 1회 */
+}
+
+/* 최초 1회 */
 syncHome();
+
 /* ===== (추가) 스탬프(+) 버튼 → coin1 5개 쌓기 모달 ===== */
 const btnStamp = document.getElementById('btnStamp');
 const coinModal = document.getElementById('coinModal');
 const coinStack = document.getElementById('coinStack');
 const closeCoinModal = document.getElementById('closeCoinModal');
 const confirmCoin = document.getElementById('confirmCoin');
+
 function openCoinModal(){
   if (!coinModal || !coinStack) return;
   coinStack.innerHTML = '';
   coinModal.classList.add('show');
   coinModal.setAttribute('aria-hidden','false');
+
   // coin1.png 5개가 순서대로 쌓이게
   for(let i=0;i<5;i++){
     const img = document.createElement('img');
@@ -1112,24 +1667,32 @@ function openCoinModal(){
     img.style.zIndex = String(10+i);
     coinStack.appendChild(img);
   }
-}function closeCoin(){
+}
+
+function closeCoin(){
   if (!coinModal) return;
   coinModal.classList.remove('show');
   coinModal.setAttribute('aria-hidden','true');
-}btnStamp?.addEventListener('click', openCoinModal);
+}
+
+btnStamp?.addEventListener('click', openCoinModal);
 closeCoinModal?.addEventListener('click', closeCoin);
 coinModal?.querySelector('.modalDim')?.addEventListener('click', closeCoin);
+
 confirmCoin?.addEventListener('click', () => {
   // 전시용: 확인 누르면 스탬프 1 증가(최대 5)
   stampCount = Math.min(5, stampCount + 1);
   syncHome();
   closeCoin();
 });
+
 /* ===== (추가) AR 오브젝트(요정/구름) 위치 랜덤 살짝 이동 ===== */
 function clamp(v,min,max){ return Math.max(min, Math.min(max,v)); }
+
 // 기본 위치(퍼센트)
 let fairyPos = { x: 68, y: 62 };  // 우하단 근처
 let cloudPos = { x: 26, y: 40 };  // 좌중단 근처
+
 function applyPos(){
   if (fairy){
     fairy.style.left = fairyPos.x + '%';
@@ -1139,55 +1702,78 @@ function applyPos(){
     cloud.style.left = cloudPos.x + '%';
     cloud.style.top  = cloudPos.y + '%';
   }
-}applyPos();
+}
+applyPos();
+
 // 700ms마다 아주 살짝 흔들리듯 이동
 setInterval(() => {
   fairyPos.x = clamp(fairyPos.x + (Math.random()*2-1)*1.2, 8, 88);
   fairyPos.y = clamp(fairyPos.y + (Math.random()*2-1)*1.2, 16, 82);
+
   cloudPos.x = clamp(cloudPos.x + (Math.random()*2-1)*1.0, 8, 88);
   cloudPos.y = clamp(cloudPos.y + (Math.random()*2-1)*1.0, 16, 82);
+
   applyPos();
 }, 700);
+
 /* ===== (수정) 포인트 적립이 홈에도 반영되도록 syncHome 호출 ===== */
 const _oldPopupNext = popupNext?.onclick; // 혹시 기존 onclick을 쓰는 경우 대비
+
 popupNext?.addEventListener('click', () => {
   // 기존 로직이 이미 addEventListener로 붙어 있으니,
   // 여기서는 “포인트가 바뀐 후 홈도 반영”만 추가로 보장합니다.
   syncHome();
 });
+
 /* ===== (추가) 포인트 적립될 때 홈에도 즉시 반영되도록: 기존 points 증가 직후에도 호출 ===== */
 /* 아래는 안전장치: points 값이 바뀔 때마다 syncHome를 호출할 수 있게 setPoint 헬퍼 */
 function addPoints(p){
   points += p;
   if (pointValueEl) pointValueEl.textContent = String(points);
   syncHome();
-}/* ===== 2번 화면 하단 네비게이션 ===== */
+}
+
+
+/* ===== 2번 화면 하단 네비게이션 ===== */
+
 /* ===== 6번 화면(지도) : “지도 클릭 → screen-map 열기 + 금오름 포인트 표시” ===== */
+
 // 1) 지도 탭(하단) 요소
 const tabMap = document.getElementById('tabMap');
+
 // 2) Leaflet 지도: 최초 1회만 생성하고, 화면 열릴 때마다 사이즈 갱신
 let leafletMap = null;
 let leafletMarker = null;
 let mapInited = false;
+
 function openMapScreen(){
   showScreen('map');
   initLeafletMap();
-}// 금오름(한림읍 금악리) 근처 좌표(시연용)
+}
+
+// 금오름(한림읍 금악리) 근처 좌표(시연용)
 const GEUMOREUM_LATLNG = [33.354, 126.289]; // 필요하면 미세조정 가능
+
 function initLeafletMap(){
   const mapEl = document.getElementById('mapBox');
   if (!mapEl) return;
+
   if (!mapInited){
     leafletMap = L.map('mapBox', { zoomControl: true }).setView(GEUMOREUM_LATLNG, 12);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap'
     }).addTo(leafletMap);
+
     leafletMarker = L.marker(GEUMOREUM_LATLNG).addTo(leafletMap);
+
     // ✅ 포인트 아이콘 + 금오름 이름(팝업)
     leafletMarker.bindPopup('<b>금오름</b><br/>한림읍 금악리').openPopup();
+
     mapInited = true;
   }
+
   // 화면 전환 직후엔 div 크기를 못 잡아서 깨질 수 있어요 → invalidateSize로 교정
   setTimeout(() => {
     try{
@@ -1196,10 +1782,13 @@ function initLeafletMap(){
       leafletMarker && leafletMarker.openPopup();
     }catch(e){}
   }, 150);
-}// 3) 지도 탭 클릭 연결
+}
+
+// 3) 지도 탭 클릭 연결
 if (tabMap){
   tabMap.style.cursor = 'pointer'; // 손모양(안전장치)
   tabMap.addEventListener('click', openMapScreen);
+
   // 키보드 접근(엔터/스페이스)
   tabMap.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -1207,26 +1796,39 @@ if (tabMap){
       openMapScreen();
     }
   });
-}/* =========================
+}
+
+/* =========================
    하단 네비게이션 active 통합 처리
 ========================= */
+
 const navItems = document.querySelectorAll('.navItem');
+
 navItems.forEach(item => {
   item.style.cursor = 'pointer';
+
   item.addEventListener('click', () => {
     const target = item.dataset.screen;
     if (!target) return;
-    // 1⃣ 화면 전환
+
+    // 1️⃣ 화면 전환
     showScreen(target);
-    // 2⃣ active 상태 정리
+
+    // 2️⃣ active 상태 정리
     navItems.forEach(i => i.classList.remove('active'));
     item.classList.add('active');
-    // 3⃣ 지도면 지도 초기화
+
+    // 3️⃣ 지도면 지도 초기화
     if (target === 'map') {
       initLeafletMap();
     }
   });
 });
+
+
+
+
+
   
   
 // 홈 버튼 → 1번 화면
@@ -1234,19 +1836,147 @@ const navHome = document.getElementById('navHome');
 navHome?.addEventListener('click', () => {
   showScreen('s1');   // 1번 화면 id
 });
+
 // 더보기 버튼(점3개) → 3번 화면
 const navMore = document.getElementById('navMore');
 navMore?.addEventListener('click', () => {
   showScreen('more'); // 3번 화면 id
 });
+
   // 오름적립 버튼 → 5번 화면
 const navStamps = document.getElementById('navStamps');
 navStamps?.addEventListener('click', () => {
   showScreen('stamps');
 });
+
 // (옵션) 오름적립 화면 닫기 버튼 → 홈으로
 const btnStampsClose = document.getElementById('btnStampsClose');
 btnStampsClose?.addEventListener('click', () => showScreen('home'));
+
+
+<!-- =========================
+     (추가) 쿠폰 교환 바텀시트 모달
+========================= -->
+<div id="exchangeSheet" class="sheet" aria-hidden="true">
+  <div class="sheetDim" data-sheet-close></div>
+
+  <div class="sheetPanel" role="dialog" aria-modal="true" aria-label="쿠폰 교환">
+    <div class="sheetHandle" aria-hidden="true"></div>
+
+    <div class="sheetHead">
+      <div class="sheetTitle">쿠폰 교환</div>
+      <button class="iconbtn tappable" type="button" data-sheet-close title="닫기" style="width:34px;height:34px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sheetBody">
+      <div class="subtle">선택한 쿠폰</div>
+      <div style="margin-top:6px; font-weight:900; font-size:16px; letter-spacing:-.2px;" id="exName">-</div>
+
+      <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between;">
+        <div class="subtle">필요 코인</div>
+        <div style="font-weight:900;"><span id="exCost">0</span> 코인</div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between;">
+        <div class="subtle">보유 코인</div>
+        <div style="font-weight:900;"><span id="exBalance">0</span> 코인</div>
+      </div>
+
+      <div class="subtle" style="margin-top:12px;" id="exHint">
+        교환하면 쿠폰함에 저장돼요.
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:10px;">
+        <button class="ghostBtn tappable" type="button" data-sheet-close style="flex:1;">취소</button>
+        <button class="primaryMini tappable" type="button" id="btnDoExchange" style="flex:1;">교환하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+/* =========================
+   (추가) 쿠폰 교환 바텀시트
+========================= */
+const exchangeSheet = document.getElementById('exchangeSheet');
+const exName = document.getElementById('exName');
+const exCost = document.getElementById('exCost');
+const exBalance = document.getElementById('exBalance');
+const btnDoExchange = document.getElementById('btnDoExchange');
+
+function openSheet(){
+  if (!exchangeSheet) return;
+  exchangeSheet.classList.add('show');
+  exchangeSheet.setAttribute('aria-hidden', 'false');
+}
+
+function closeSheet(){
+  if (!exchangeSheet) return;
+  exchangeSheet.classList.remove('show');
+  exchangeSheet.setAttribute('aria-hidden', 'true');
+}
+
+// ✅ dim 클릭/닫기 버튼들
+if (exchangeSheet){
+  exchangeSheet.addEventListener('click', (e) => {
+    const closeEl = e.target.closest('[data-sheet-close]');
+    if (closeEl) closeSheet();
+  });
+}
+
+// ✅ ESC 닫기
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && exchangeSheet?.classList.contains('show')) closeSheet();
+});
+
+// ✅ 쿠폰 "교환" 버튼 -> 시트 오픈
+document.querySelectorAll('#screen-points .couponItem').forEach((item) => {
+  const btn = item.querySelector('.couponBtn');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const title = item.querySelector('.couponTitle')?.textContent?.trim() || '쿠폰';
+    const costText = item.querySelector('.couponMeta')?.textContent || '0';
+    const cost = parseInt(costText.replace(/[^\d]/g, ''), 10) || 0;
+
+    const balanceEl = document.getElementById('coinBalance');
+    const balance = parseInt((balanceEl?.textContent || '0').replace(/[^\d]/g, ''), 10) || 0;
+
+    exName.textContent = title;
+    exCost.textContent = String(cost);
+    exBalance.textContent = String(balance);
+
+    // 버튼 활성/비활성(보유코인 부족 시)
+    if (balance < cost){
+      btnDoExchange.disabled = true;
+      btnDoExchange.style.opacity = '.5';
+      document.getElementById('exHint').textContent = '코인이 부족해요. 오름 적립 후 교환해보세요!';
+    } else {
+      btnDoExchange.disabled = false;
+      btnDoExchange.style.opacity = '1';
+      document.getElementById('exHint').textContent = '교환하면 쿠폰함에 저장돼요.';
+    }
+
+    openSheet();
+  });
+});
+
+// ✅ “교환하기”는 다음 단계에서 실제 차감/애니메이션 붙일 거라 지금은 닫기만
+if (btnDoExchange){
+  btnDoExchange.addEventListener('click', () => {
+    closeSheet();
+  });
+}
+
+
+
+
+  
 </script>
+
 </body>
 </html>
