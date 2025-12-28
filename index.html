@@ -1360,10 +1360,13 @@ img[src$="present2.png"]{
 
 
 // ✅ 홈(2번) -> 포인트/쿠폰(7번)
-const btnPointOpen = document.getElementById('btnPointOpen');
-if (btnPointOpen){
-  btnPointOpen.addEventListener('click', () => showScreen('points'));
+const btnPoints = document.getElementById('btnPoints');
+if (btnPoints){
+  btnPoints.addEventListener('click', () => showScreen('points'));
 }
+
+  
+
 
 // ✅ 포인트/쿠폰(7번) 닫기 -> 홈(2번)
 const btnPointsClose = document.getElementById('btnPointsClose');
