@@ -479,7 +479,28 @@ button{
 .couponTitle{ font-weight: 900; letter-spacing:-.2px; font-size: 13.5px; }
 .couponMeta{ color: var(--muted); font-weight: 800; font-size: 12px; margin-top: 4px; }
 
+/* ===== 쿠폰 교환 버튼을 아래로 내리기 (레이아웃 정렬 개선) ===== */
+.couponItem{
+  flex-direction: column;        /* 가로 → 세로 */
+  align-items: stretch;          /* 내부 요소 폭 맞춤 */
+}
 
+.couponIcon{
+  margin-bottom: 4px;
+}
+
+.couponTxt{
+  width: 100%;
+}
+
+.couponBtn{
+  margin-top: 10px;
+  width: 100%;                   /* 버튼 가로 꽉 차게 */
+  text-align: center;
+}
+
+
+    
 
     
     /* 더보기(점3개) - 오른쪽 하단 강조 */
