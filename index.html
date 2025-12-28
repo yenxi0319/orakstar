@@ -1379,7 +1379,9 @@ if (btnPointsClose){
   /* ====== 2번(홈) 안내 버튼 → 4번(AR) ====== */
   const btnGuide = document.getElementById('btnGuide');
 
-  
+  // ✅ AR 닫기 시 돌아갈 화면(기본: home)
+let arReturnScreen = 'home';
+
   
   /* 카메라 요소 */
   const arVideo = document.getElementById('arVideo');
@@ -1454,6 +1456,7 @@ if (btnPointsClose){
 
   if (btnGuide){
     btnGuide.addEventListener('click', async () => {
+     arReturnScreen = 'home';     // ✅ 안내로 들어오면 닫기 시 홈으로
       showScreen('ar');
       await startCamera();
     });
@@ -1462,7 +1465,15 @@ if (btnPointsClose){
   if (btnArClose){
     btnArClose.addEventListener('click', () => {
       stopCamera();
-      showScreen('home');
+
+    // ✅ 들어온 곳(홈 or 지도)으로 복귀
+    showScreen(arReturnScreen);
+
+    // ✅ 지도로 돌아갈 때 지도 깨짐 방지 리프레시
+    if (arReturnScreen === 'map') {
+      initLeafletMap();
+    }
+      
     });
   }
 
@@ -1651,6 +1662,14 @@ function initLeafletMap(){
 
     // ✅ 포인트 아이콘 + 금오름 이름(팝업)
     leafletMarker.bindPopup('<b>금오름</b><br/>한림읍 금악리').openPopup();
+
+// ✅ 마커(금오름 표시) 클릭 → AR 화면 열기
+leafletMarker.on('click', async () => {
+  arReturnScreen = 'map';    // ✅ 지도에서 들어오면 닫기 시 지도로
+  showScreen('ar');
+  await startCamera();
+});
+    
 
 // ✅ 마커(금오름 표시) 탭 → AR 화면으로 이동 + 카메라 시작
 leafletMarker.on('click', async () => {
