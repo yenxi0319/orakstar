@@ -1079,7 +1079,7 @@ button{
           <div>오름적립</div>
         </div>
 
- <div class="tab" id="tabMap" role="button" tabindex="0">
+<div class="navItem" id="tabMap" data-screen="map">
   <!-- 지도 아이콘 -->
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
     <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z"/>
@@ -1087,6 +1087,7 @@ button{
   </svg>
   지도
 </div>
+
 
 
 
@@ -1117,6 +1118,7 @@ button{
     more: document.getElementById('screen-more'),
     ar: document.getElementById('screen-ar'),
     stamps: document.getElementById('screen-stamps'),
+    map: document.getElementById('screen-map'), // map 이 줄 추가
   };
 
   function showScreen(name){
@@ -1369,6 +1371,101 @@ function addPoints(p){
 
 /* ===== 2번 화면 하단 네비게이션 ===== */
 
+/* ===== 6번 화면(지도) : “지도 클릭 → screen-map 열기 + 금오름 포인트 표시” ===== */
+
+// 1) 지도 탭(하단) 요소
+const tabMap = document.getElementById('tabMap');
+
+// 2) Leaflet 지도: 최초 1회만 생성하고, 화면 열릴 때마다 사이즈 갱신
+let leafletMap = null;
+let leafletMarker = null;
+let mapInited = false;
+
+function openMapScreen(){
+  showScreen('map');
+  initLeafletMap();
+}
+
+// 금오름(한림읍 금악리) 근처 좌표(시연용)
+const GEUMOREUM_LATLNG = [33.354, 126.289]; // 필요하면 미세조정 가능
+
+function initLeafletMap(){
+  const mapEl = document.getElementById('mapBox');
+  if (!mapEl) return;
+
+  if (!mapInited){
+    leafletMap = L.map('mapBox', { zoomControl: true }).setView(GEUMOREUM_LATLNG, 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(leafletMap);
+
+    leafletMarker = L.marker(GEUMOREUM_LATLNG).addTo(leafletMap);
+
+    // ✅ 포인트 아이콘 + 금오름 이름(팝업)
+    leafletMarker.bindPopup('<b>금오름</b><br/>한림읍 금악리').openPopup();
+
+    mapInited = true;
+  }
+
+  // 화면 전환 직후엔 div 크기를 못 잡아서 깨질 수 있어요 → invalidateSize로 교정
+  setTimeout(() => {
+    try{
+      leafletMap && leafletMap.invalidateSize();
+      leafletMap && leafletMap.setView(GEUMOREUM_LATLNG, 12);
+      leafletMarker && leafletMarker.openPopup();
+    }catch(e){}
+  }, 150);
+}
+
+// 3) 지도 탭 클릭 연결
+if (tabMap){
+  tabMap.style.cursor = 'pointer'; // 손모양(안전장치)
+  tabMap.addEventListener('click', openMapScreen);
+
+  // 키보드 접근(엔터/스페이스)
+  tabMap.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openMapScreen();
+    }
+  });
+}
+
+/* =========================
+   하단 네비게이션 active 통합 처리
+========================= */
+
+const navItems = document.querySelectorAll('.navItem');
+
+navItems.forEach(item => {
+  item.style.cursor = 'pointer';
+
+  item.addEventListener('click', () => {
+    const target = item.dataset.screen;
+    if (!target) return;
+
+    // 1️⃣ 화면 전환
+    showScreen(target);
+
+    // 2️⃣ active 상태 정리
+    navItems.forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+
+    // 3️⃣ 지도면 지도 초기화
+    if (target === 'map') {
+      initLeafletMap();
+    }
+  });
+});
+
+
+
+
+
+  
+  
 // 홈 버튼 → 1번 화면
 const navHome = document.getElementById('navHome');
 navHome?.addEventListener('click', () => {
